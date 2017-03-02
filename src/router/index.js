@@ -1,15 +1,34 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
+import Application from '@/components/Application'
+import Individual from '@/components/Individual'
+import Approval from '@/components/Approval'
+import Manage from '@/components/Manage'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Hello',
-      component: Hello
+      path: '/Application',
+      name: 'Application',
+      component: Application
+    },
+    {
+      path: '/Individual',
+      name: 'Individual',
+      component: Individual
+    },
+    {
+      path: '/Approval',
+      name: 'Approval',
+      component: Approval
+    },
+    {
+      path: '/Manage',
+      name: 'Manage',
+      component: Manage
     }
   ]
 })
+
