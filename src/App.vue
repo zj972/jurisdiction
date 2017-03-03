@@ -9,7 +9,8 @@
           <el-menu-item
             v-for="(list, index) in lists"
             :index="list.address"
-            v-text="list.name">
+            v-text="list.name"
+            :key="index">
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -63,5 +64,8 @@ export default {
 .list>.is-active{
   background: #d1dbe5;
   color: #fff;
+}
+.border-bottom{
+  border-bottom: 1px solid #99A9BF;
 }
 </style>
