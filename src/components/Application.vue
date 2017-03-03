@@ -47,7 +47,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-table :data="tableData" border style="width: 100%" max-height="250">
+        <el-table :data="tableDataAdd" border style="width: 100%" max-height="250">
             <el-table-column
               v-for="(header,index) in tableHeader"
               :prop="header.prop"
@@ -56,12 +56,43 @@
             </el-table-column>
             <el-table-column fixed="right" label="操作">
               <template scope="scope">
-                <el-button @click.native.prevent="deleteRow(scope.$index, tableData)" type="text" size="small">
+                <el-button @click.native.prevent="deleteRow(scope.$index, tableDataAdd)" size="small">
                   添加
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
+      </el-row>
+      <div class="border-bottom"></div>
+      <el-row>
+        <span class="list-title">已申请添加列表：</span>
+        <el-table :data="tableDataDel" border style="width: 100%" max-height="250">
+            <el-table-column
+              v-for="(header,index) in tableHeader"
+              :prop="header.prop"
+              :label="header.label"
+              :key="index">
+            </el-table-column>
+            <el-table-column fixed="right" label="操作">
+              <template scope="scope">
+                <el-button @click.native.prevent="deleteRow(scope.$index, tableDataDel)" size="small">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+      </el-row>
+      <el-row>
+        <span class="list-title">申请理由：</span>
+        <el-input
+          type="textarea"
+          :rows="4"
+          placeholder="请输入内容">
+        </el-input>
+      </el-row>
+      <el-row type="flex" justify="center" class="button-submit">
+        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary">主要按钮</el-button></el-col>
+        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary">主要按钮</el-button></el-col>
       </el-row>
     </div>
   </div>
@@ -258,9 +289,75 @@ export default {
           label: '业务审核人'
         }
       ],
-      tableData: [
+      tableDataAdd: [
         {
+          game: 'gameAdd',
+          platform: 'platform',
+          hall: 'hall',
+          terminal: 'terminal',
+          package: 'package',
+          appid: 'appid',
+          content: 'content',
+          verifier: 'verifier'
+        }, {
           game: 'game',
+          platform: 'platform',
+          hall: 'hall',
+          terminal: 'terminal',
+          package: 'package',
+          appid: 'appid',
+          content: 'content',
+          verifier: 'verifier'
+        }, {
+          game: 'game',
+          platform: 'platform',
+          hall: 'hall',
+          terminal: 'terminal',
+          package: 'package',
+          appid: 'appid',
+          content: 'content',
+          verifier: 'verifier'
+        }, {
+          game: 'game',
+          platform: 'platform',
+          hall: 'hall',
+          terminal: 'terminal',
+          package: 'package',
+          appid: 'appid',
+          content: 'content',
+          verifier: 'verifier'
+        }, {
+          game: 'game',
+          platform: 'platform',
+          hall: 'hall',
+          terminal: 'terminal',
+          package: 'package',
+          appid: 'appid',
+          content: 'content',
+          verifier: 'verifier'
+        }, {
+          game: 'game',
+          platform: 'platform',
+          hall: 'hall',
+          terminal: 'terminal',
+          package: 'package',
+          appid: 'appid',
+          content: 'content',
+          verifier: 'verifier'
+        }, {
+          game: 'game',
+          platform: 'platform',
+          hall: 'hall',
+          terminal: 'terminal',
+          package: 'package',
+          appid: 'appid',
+          content: 'content',
+          verifier: 'verifier'
+        }
+      ],
+      tableDataDel: [
+        {
+          game: 'gameDel',
           platform: 'platform',
           hall: 'hall',
           terminal: 'terminal',
@@ -364,5 +461,11 @@ export default {
 }
 .more{
   margin-left: 15px;
+}
+.list-title{
+  line-height: 34px;
+}
+.button-submit{
+  text-align: center;
 }
 </style>
