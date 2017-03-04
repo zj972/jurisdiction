@@ -52,32 +52,48 @@
               v-for="(header,index) in tableHeader"
               :prop="header.prop"
               :label="header.label"
-              :key="index">
+              :key="index"
+              align="center">
             </el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <el-table-column label="权限内容" align="center" width="220">
               <template scope="scope">
-                <el-button @click.native.prevent="deleteRow(scope.$index, tableDataAdd)" size="small">
+                <el-checkbox v-model="scope.row.content.refund">发货退款</el-checkbox>
+                <el-checkbox v-model="scope.row.content.alarm">报警设置</el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" align="center" width="100">
+              <template scope="scope">
+                <el-button @click.native.prevent="addRow(scope.$index, tableDataAdd)" size="small">
                   添加
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
       </el-row>
-      <div class="border-bottom"></div>
       <el-row>
+        <div class="border-bottom"></div>
         <span class="list-title">已申请添加列表：</span>
         <el-table :data="tableDataDel" border style="width: 100%" max-height="250">
             <el-table-column
               v-for="(header,index) in tableHeader"
               :prop="header.prop"
               :label="header.label"
-              :key="index">
+              :key="index"
+              align="center">
             </el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <el-table-column label="权限内容" align="center" width="220">
+              <template scope="scope">
+                <el-checkbox v-model="scope.row.content.refund">发货退款</el-checkbox>
+                <el-checkbox v-model="scope.row.content.alarm">报警设置</el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" align="center" width="100">
               <template scope="scope">
                 <el-button @click.native.prevent="deleteRow(scope.$index, tableDataDel)" size="small">
                   删除
                 </el-button>
+                  </span>
+                </el-dialog>
               </template>
             </el-table-column>
           </el-table>
@@ -91,8 +107,8 @@
         </el-input>
       </el-row>
       <el-row type="flex" justify="center" class="button-submit">
-        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary">主要按钮</el-button></el-col>
-        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary">主要按钮</el-button></el-col>
+        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary" size="large">重置</el-button></el-col>
+        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary" size="large">提交</el-button></el-col>
       </el-row>
     </div>
   </div>
@@ -112,6 +128,7 @@ export default {
       viewList: ['订单查询', '欺诈订单', '统计信息', '产品配置', '收入汇总', '应用警报设置', '财务对账'],
       state: true,
       number: 3,
+      dialogVisible: false,
       options: [
         {
           value: 'zhinan',
@@ -186,9 +203,6 @@ export default {
                 }, {
                   value: 'input-number',
                   label: 'InputNumber 计数器'
-                }, {
-                  value: 'select',
-                  label: 'Select 选择器'
                 }, {
                   value: 'cascader',
                   label: 'Cascader 级联选择器'
@@ -281,9 +295,13 @@ export default {
         }, {
           prop: 'appid',
           label: 'APPID应用'
-        }, {
-          prop: 'content',
-          label: '权限内容'
+        // }, {
+        //   prop: 'content',
+        //   label: '权限内容',
+        //   button: [
+        //     '发货退款',
+        //     '报警设置'
+        //   ]
         }, {
           prop: 'verifier',
           label: '业务审核人'
@@ -291,135 +309,56 @@ export default {
       ],
       tableDataAdd: [
         {
-          game: 'gameAdd',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
+          game: '1',
+          platform: '2',
+          hall: '3',
+          terminal: '4',
+          package: '5',
+          appid: '6',
+          verifier: '7',
+          content: {
+            refund: true,
+            alarm: false
+          }
         }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
+          game: '11',
+          platform: '22',
+          hall: '33',
+          terminal: '44',
+          package: '55',
+          appid: '66',
+          verifier: '77',
+          content: {
+            refund: true,
+            alarm: true
+          }
         }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
+          game: '111',
+          platform: '222',
+          hall: '333',
+          terminal: '444',
+          package: '555',
+          appid: '666',
+          verifier: '777',
+          content: {
+            refund: false,
+            alarm: true
+          }
         }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
+          game: '12',
+          platform: '23',
+          hall: '34',
+          terminal: '45',
+          package: '56',
+          appid: '67',
+          verifier: '78',
+          content: {
+            refund: true,
+            alarm: false
+          }
         }
       ],
       tableDataDel: [
-        {
-          game: 'gameDel',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }, {
-          game: 'game',
-          platform: 'platform',
-          hall: 'hall',
-          terminal: 'terminal',
-          package: 'package',
-          appid: 'appid',
-          content: 'content',
-          verifier: 'verifier'
-        }
       ]
     }
   },
@@ -433,8 +372,27 @@ export default {
         this.state = true
       }
     },
-    deleteRow (index, rows) {
+    addRow (index, rows) {
+      this.tableDataDel.push(rows[index])
       rows.splice(index, 1)
+    },
+    deleteRow (index, rows) {
+      this.$confirm('此操作将删除该条申请信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        rows.splice(index, 1)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
@@ -467,5 +425,8 @@ export default {
 }
 .button-submit{
   text-align: center;
+}
+table td{
+  background: red;
 }
 </style>
