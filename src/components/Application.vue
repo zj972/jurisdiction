@@ -31,7 +31,7 @@
           <el-row>
             <el-col :xs="24" :sm="3" :md="2" :lg="2">查看内容：</el-col>
             <el-col :xs="24" :sm="21" :md="22" :lg="22">
-              <!-- <el-checkbox-group v-model="view">
+              <el-checkbox-group v-model="view">
                 <el-checkbox
                   v-for="(item,index) in viewList"
                   :label="item"
@@ -40,7 +40,7 @@
                 </el-checkbox>
                 <el-button size="mini" @click="more" v-if="state" class="more">更多<i class="el-icon-arrow-right el-icon--right"></i></el-button>
                 <el-button size="mini" @click="more" v-else class="more"><i class="el-icon-arrow-left el-icon--left"></i>收起</el-button>
-              </el-checkbox-group> -->
+              </el-checkbox-group>
             </el-col>
           </el-row>
           <!-- 申请理由 -->
@@ -76,12 +76,15 @@
                   :label="header.label"
                   :key="index"
                   align="center">
+
                 </el-table-column>
                 <el-table-column label="权限内容" align="center" width="220">
                   <template scope="scope">
                     <el-checkbox v-model="scope.row.content.refund">发货退款</el-checkbox>
                     <el-checkbox v-model="scope.row.content.alarm">报警设置</el-checkbox>
                   </template>
+                </el-table-column>
+                <el-table-column label="业务审核人" prop="verifier" align="center">
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" width="100">
                   <template scope="scope">
@@ -109,6 +112,8 @@
                     <el-checkbox v-model="scope.row.content.refund" disabled>发货退款</el-checkbox>
                     <el-checkbox v-model="scope.row.content.alarm" disabled>报警设置</el-checkbox>
                   </template>
+                </el-table-column>
+                <el-table-column label="业务审核人" prop="verifier" align="center">
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" align="center" width="100">
                   <template scope="scope">
@@ -184,9 +189,6 @@ export default {
         //     '发货退款',
         //     '报警设置'
         //   ]
-        }, {
-          prop: 'verifier',
-          label: '业务审核人'
         }
       ],
       tableDataAdd: [
