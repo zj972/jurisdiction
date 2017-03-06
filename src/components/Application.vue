@@ -1,5 +1,6 @@
 <template>
   <div class="Application">
+    <!-- 申请人 -->
     <div class="proposer">
       <span class="border-bottom">申请人：</span>
       <el-row>
@@ -16,100 +17,127 @@
         </el-col>
       </el-row>
     </div>
+    <!-- 申请内容 -->
     <div class="content">
       <span class="border-bottom">申请内容：</span>
+      <!-- 应用权限 -->
       <el-row>
         <el-col :xs="24" :sm="3" :md="2" :lg="2">应用权限：</el-col>
         <el-col :xs="24" :sm="21" :md="22" :lg="22">支付后台APPID权限，会根据数据后台的BPID权限自动开通，如果没有某个应用的appid权限，请自行去data后台开通对应的bpid权限，如果在数据后台开通权限后，在支付后台还是提示无权限，请退出账号，清空浏览器缓存，重新登录一下即可查看；如果有疑问，请及时联系AnneDu，谢谢。</el-col>
       </el-row>
-      <el-row>
-        <el-col :xs="24" :sm="3" :md="2" :lg="2">查看内容：</el-col>
-        <el-col :xs="24" :sm="21" :md="22" :lg="22">
-          <el-checkbox-group v-model="view">
-            <el-checkbox
-              v-for="(item,index) in viewList"
-              :label="item"
-              :key="index"
-              v-show="index < number">
-            </el-checkbox>
-            <el-button size="mini" @click="more" v-if="state" class="more">更多<i class="el-icon-arrow-right el-icon--right"></i></el-button>
-            <el-button size="mini" @click="more" v-else class="more"><i class="el-icon-arrow-left el-icon--left"></i>收起</el-button>
-          </el-checkbox-group>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xs="24" :sm="3" :md="2" :lg="2">操作权限：</el-col>
-        <el-col :xs="24" :sm="21" :md="22" :lg="22">
-          <el-cascader
-            :options="options"
-            v-model="selectedOptions">
-          </el-cascader>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-table :data="tableDataAdd" border style="width: 100%" max-height="250">
-            <el-table-column
-              v-for="(header,index) in tableHeader"
-              :prop="header.prop"
-              :label="header.label"
-              :key="index"
-              align="center">
-            </el-table-column>
-            <el-table-column label="权限内容" align="center" width="220">
-              <template scope="scope">
-                <el-checkbox v-model="scope.row.content.refund">发货退款</el-checkbox>
-                <el-checkbox v-model="scope.row.content.alarm">报警设置</el-checkbox>
-              </template>
-            </el-table-column>
-            <el-table-column fixed="right" label="操作" align="center" width="100">
-              <template scope="scope">
-                <el-button @click.native.prevent="addRow(scope.$index, tableDataAdd)" size="small">
-                  添加
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-      </el-row>
-      <el-row>
-        <div class="border-bottom"></div>
-        <span class="list-title">已申请添加列表：</span>
-        <el-table :data="tableDataDel" border style="width: 100%" max-height="250">
-            <el-table-column
-              v-for="(header,index) in tableHeader"
-              :prop="header.prop"
-              :label="header.label"
-              :key="index"
-              align="center">
-            </el-table-column>
-            <el-table-column label="权限内容" align="center" width="220">
-              <template scope="scope">
-                <el-checkbox v-model="scope.row.content.refund">发货退款</el-checkbox>
-                <el-checkbox v-model="scope.row.content.alarm">报警设置</el-checkbox>
-              </template>
-            </el-table-column>
-            <el-table-column fixed="right" label="操作" align="center" width="100">
-              <template scope="scope">
-                <el-button @click.native.prevent="deleteRow(scope.$index, tableDataDel)" size="small">
-                  删除
-                </el-button>
-                  </span>
-                </el-dialog>
-              </template>
-            </el-table-column>
-          </el-table>
-      </el-row>
-      <el-row>
-        <span class="list-title">申请理由：</span>
-        <el-input
-          type="textarea"
-          :rows="4"
-          placeholder="请输入内容">
-        </el-input>
-      </el-row>
-      <el-row type="flex" justify="center" class="button-submit">
-        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary" size="large">重置</el-button></el-col>
-        <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary" size="large">提交</el-button></el-col>
-      </el-row>
+      <el-tabs value="first">
+        <el-tab-pane label="查询权限" name="first">
+          <!-- 查看内容 -->
+          <el-row>
+            <el-col :xs="24" :sm="3" :md="2" :lg="2">查看内容：</el-col>
+            <el-col :xs="24" :sm="21" :md="22" :lg="22">
+              <!-- <el-checkbox-group v-model="view">
+                <el-checkbox
+                  v-for="(item,index) in viewList"
+                  :label="item"
+                  :key="index"
+                  v-show="index < number">
+                </el-checkbox>
+                <el-button size="mini" @click="more" v-if="state" class="more">更多<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+                <el-button size="mini" @click="more" v-else class="more"><i class="el-icon-arrow-left el-icon--left"></i>收起</el-button>
+              </el-checkbox-group> -->
+            </el-col>
+          </el-row>
+          <!-- 申请理由 -->
+          <el-row>
+            <el-col class="list-title">申请理由：</el-col>
+            <el-input
+              v-model="reason"
+              type="textarea"
+              :rows="4"
+              placeholder="请输入内容">
+            </el-input>
+          </el-row>
+          <!-- 提交 -->
+          <el-row type="flex" justify="center" class="button-submit">
+            <el-col :xs="12" :sm="6" :md="5" :lg="3"><el-button type="primary" size="large" @click="cancel">取消</el-button></el-col>
+            <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary" size="large" @click="submit">提交申请</el-button></el-col>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="操作权限" name="second">
+          <!-- 操作权限 -->
+          <el-row>
+            <el-col :xs="24" :sm="3" :md="2" :lg="2">操作权限：</el-col>
+            <el-col :xs="24" :sm="21" :md="22" :lg="22">
+              <!-- 选择器 -->
+            </el-col>
+          </el-row>
+          <!-- 添加列表 -->
+          <el-row>
+            <el-table :data="tableDataAdd" border style="width: 100%" max-height="250">
+                <el-table-column
+                  v-for="(header,index) in tableHeader"
+                  :prop="header.prop"
+                  :label="header.label"
+                  :key="index"
+                  align="center">
+                </el-table-column>
+                <el-table-column label="权限内容" align="center" width="220">
+                  <template scope="scope">
+                    <el-checkbox v-model="scope.row.content.refund">发货退款</el-checkbox>
+                    <el-checkbox v-model="scope.row.content.alarm">报警设置</el-checkbox>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed="right" label="操作" align="center" width="100">
+                  <template scope="scope">
+                    <el-button @click.native.prevent="addRow(scope.$index, tableDataAdd)" size="small">
+                      添加
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+          </el-row>
+          <div class="border-bottom"></div>
+          <!-- 申请列表 -->
+          <el-row>
+            <el-col class="list-title">已申请添加列表：</el-col>
+            <el-table :data="tableDataDel" border style="width: 100%" max-height="250">
+                <el-table-column
+                  v-for="(header,index) in tableHeader"
+                  :prop="header.prop"
+                  :label="header.label"
+                  :key="index"
+                  align="center">
+                </el-table-column>
+                <el-table-column label="权限内容" align="center" width="220">
+                  <template scope="scope">
+                    <el-checkbox v-model="scope.row.content.refund" disabled>发货退款</el-checkbox>
+                    <el-checkbox v-model="scope.row.content.alarm" disabled>报警设置</el-checkbox>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed="right" label="操作" align="center" width="100">
+                  <template scope="scope">
+                    <el-button @click.native.prevent="deleteRow(scope.$index, tableDataDel)" size="small">
+                      删除
+                    </el-button>
+                      </span>
+                    </el-dialog>
+                  </template>
+                </el-table-column>
+              </el-table>
+          </el-row>
+          <!-- 申请理由 -->
+          <el-row>
+            <el-col class="list-title">申请理由：</el-col>
+            <el-input
+              v-model="reason"
+              type="textarea"
+              :rows="4"
+              placeholder="请输入内容">
+            </el-input>
+          </el-row>
+          <!-- 提交 -->
+          <el-row type="flex" justify="center" class="button-submit">
+            <el-col :xs="12" :sm="6" :md="5" :lg="3"><el-button type="primary" size="large" @click="cancel">取消</el-button></el-col>
+            <el-col :xs="12" :sm="6" :md="5" :lg="4"><el-button type="primary" size="large" @click="submit">提交申请</el-button></el-col>
+          </el-row>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -129,153 +157,7 @@ export default {
       state: true,
       number: 3,
       dialogVisible: false,
-      options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则',
-              children: [{
-                value: 'yizhi',
-                label: '一致'
-              }, {
-                value: 'fankui',
-                label: '反馈'
-              }, {
-                value: 'xiaolv',
-                label: '效率'
-              }, {
-                value: 'kekong',
-                label: '可控'
-              }]
-            }, {
-              value: 'daohang',
-              label: '导航',
-              children: [{
-                value: 'cexiangdaohang',
-                label: '侧向导航'
-              }, {
-                value: 'dingbudaohang',
-                label: '顶部导航'
-              }]
-            }
-          ]
-        }, {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic',
-              children: [
-                {
-                  value: 'layout',
-                  label: 'Layout 布局'
-                }, {
-                  value: 'color',
-                  label: 'Color 色彩'
-                }, {
-                  value: 'typography',
-                  label: 'Typography 字体'
-                }, {
-                  value: 'icon',
-                  label: 'Icon 图标'
-                }, {
-                  value: 'button',
-                  label: 'Button 按钮'
-                }
-              ]
-            }, {
-              value: 'form',
-              label: 'Form',
-              children: [
-                {
-                  value: 'radio',
-                  label: 'Radio 单选框'
-                }, {
-                  value: 'checkbox',
-                  label: 'Checkbox 多选框'
-                }, {
-                  value: 'input',
-                  label: 'Input 输入框'
-                }, {
-                  value: 'input-number',
-                  label: 'InputNumber 计数器'
-                }, {
-                  value: 'cascader',
-                  label: 'Cascader 级联选择器'
-                }, {
-                  value: 'switch',
-                  label: 'Switch 开关'
-                }, {
-                  value: 'slider',
-                  label: 'Slider 滑块'
-                }, {
-                  value: 'time-picker',
-                  label: 'TimePicker 时间选择器'
-                }, {
-                  value: 'date-picker',
-                  label: 'DatePicker 日期选择器'
-                }, {
-                  value: 'datetime-picker',
-                  label: 'DateTimePicker 日期时间选择器'
-                }, {
-                  value: 'upload',
-                  label: 'Upload 上传'
-                }, {
-                  value: 'rate',
-                  label: 'Rate 评分'
-                }, {
-                  value: 'form',
-                  label: 'Form 表单'
-                }
-              ]
-            }, {
-              value: 'data',
-              label: 'Data',
-              children: [
-                {
-                  value: 'table',
-                  label: 'Table 表格'
-                }, {
-                  value: 'tag',
-                  label: 'Tag 标签'
-                }, {
-                  value: 'progress',
-                  label: 'Progress 进度条'
-                }, {
-                  value: 'tree',
-                  label: 'Tree 树形控件'
-                }, {
-                  value: 'pagination',
-                  label: 'Pagination 分页'
-                }, {
-                  value: 'badge',
-                  label: 'Badge 标记'
-                }
-              ]
-            }
-          ]
-        }, {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            }, {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            }, {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }
-          ]
-        }
-      ],
-      selectedOptions: [],
+      reason: '',
       tableHeader: [
         {
           prop: 'game',
@@ -363,7 +245,8 @@ export default {
     }
   },
   methods: {
-    more (e) {
+    // 更多
+    more () {
       if (this.state) {
         this.number = this.viewList.length
         this.state = false
@@ -372,25 +255,69 @@ export default {
         this.state = true
       }
     },
+    // 添加到已申请列表
     addRow (index, rows) {
       this.tableDataDel.push(rows[index])
       rows.splice(index, 1)
     },
+    // 从已申请列表删除
     deleteRow (index, rows) {
       this.$confirm('此操作将删除该条申请信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        rows.splice(index, 1)
         this.$message({
           type: 'success',
           message: '删除成功!'
         })
-        rows.splice(index, 1)
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
+        })
+      })
+    },
+    // 取消
+    cancel () {
+      this.$confirm('此操作将删除上面所选申请信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.tableDataAdd = []
+        this.tableDataDel = []
+        // view初始化
+        this.view = []
+        this.reason = ''
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    // 提交
+    submit () {
+      this.$confirm('此操作将提交上面所选申请信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 提交
+        this.$message({
+          type: 'success',
+          message: '提交成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消提交'
         })
       })
     }
@@ -411,10 +338,10 @@ export default {
   font-weight: bold;
   line-height: 24px;
 }
-.content>.el-row{
+.content .el-row{
   margin: 15px 0;
 }
-.content>.el-row>.el-col:first-child{
+.content .el-row>.el-col:first-child{
   font-weight: bold;
 }
 .more{
