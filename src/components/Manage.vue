@@ -15,7 +15,16 @@
             </el-input>
           </el-col>
           <el-col :xs="16" :sm="3" :md="8" :lg="11"><el-button>查询</el-button></el-col>
-          <el-col :xs="8" :sm="5" :md="4" :lg="3"><el-button icon="plus">添加角色</el-button></el-col>
+          <el-col :xs="8" :sm="5" :md="4" :lg="3">
+            <el-button icon="plus" @click="dialogVisible = true">添加角色</el-button>
+            <el-dialog title="添加角色" v-model="dialogVisible" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+              <add-roles></add-roles>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="cancelRoles">取 消</el-button>
+                <el-button type="primary" @click="addRoles">确 定</el-button>
+              </span>
+            </el-dialog>
+          </el-col>
         </el-row>
         <el-table :data="tableRole" border style="width: 100%">
           <el-table-column prop="id" label="角色ID" align="center" width="80">
@@ -64,7 +73,7 @@
             </el-input>
           </el-col>
         </el-row>
-        <el-table :data="tableMember" border style="width: 100%">
+        <el-table @data="tableMemberData" border style="width: 100%">
           <el-table-column prop="id" label="用户ID" align="center" width="80">
           </el-table-column>
           <el-table-column prop="name" label="用户姓名" align="center">
@@ -92,13 +101,19 @@
 </template>
 
 <script>
+import AddRoles from './AddRoles'
+
 export default {
+  components: {
+    AddRoles
+  },
   name: 'Manage',
   data () {
     return {
       inputRole: '',
       inputMember: '',
       inputSearch: '',
+      dialogVisible: false,
       tableRole: [
         {
           id: 1,
@@ -137,37 +152,38 @@ export default {
           remark: ''
         }
       ],
+      // 接收数据是使用slice()克隆tableMemberData
       tableMember: [
         {
           id: 1,
           name: '杨少波（SarboYang）',
           role: '超级管理员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:22:22'
+          time: '2017-03-17 22:25:22'
         }, {
           id: 2,
           name: '张磊（zhanglei）',
           role: '管理员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:22:22'
+          time: '2017-03-17 22:23:22'
         }, {
           id: 3,
           name: '杨少波（SarboYang）',
           role: '运营/产品人员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:22:22'
+          time: '2017-03-17 22:12:22'
         }, {
           id: 4,
           name: '杨少波（SarboYang）',
           role: '商务人员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:22:22'
+          time: '2017-03-17 26:22:22'
         }, {
           id: 5,
-          name: '杨少波（SarboYang）',
+          name: '杨波（SarboYang）',
           role: '客服人员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:22:22'
+          time: '2017-03-97 22:22:82'
         }
       ]
     }
@@ -191,13 +207,30 @@ export default {
     },
     // 搜索
     searchClick () {
-      let data = this.inputSearch
-      console.log(data)
-      // for (let obj of this.tableMember) {
-      //   for (let value in obj) {
-      //     // 正则匹配
-      //   }
-      // }
+      this.tableMember = this.tableMemberData.slice()
+      if (this.inputSearch === '') {
+        return
+      }
+      let search = this.inputSearch
+      let data = this.tableMember
+      for (let i = 0; i < data.length;) {
+        let judge = false
+        for (let value in data[i]) {
+          // 正则匹配
+          judge = judge || (new RegExp(search).test(data[i][value]))
+        }
+        console.log('judge:' + judge)
+        if (!judge) {
+          data.splice(i, 1)
+        } else {
+          i++
+        }
+      }
+    },
+    // 动态渲染表格
+    tableMemberData () {
+      console.log(this.tableMember)
+      return this.tableMember
     },
     // 菜单管理（成员管理页）
     menuMember () {
@@ -206,6 +239,13 @@ export default {
     // 操作权限
     operate () {
 
+    },
+    // 添加角色
+    addRoles () {
+      this.dialogVisible = false
+    },
+    cancelRoles () {
+      this.dialogVisible = false
     }
   }
 }

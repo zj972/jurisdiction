@@ -9,8 +9,7 @@
           <el-menu-item
             v-for="(list, index) in lists"
             :index="list.address"
-            v-text="list.name"
-            :key="index">
+            :key="index"><router-link :to="'/' + list.address" v-text="list.name"></router-link>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -61,8 +60,13 @@ export default {
   text-align: center;
 }
 
+.list a{
+  color: #48576a;
+}
 .list>.is-active{
   background: #d1dbe5;
+}
+.list>.is-active a{
   color: #fff;
 }
 .border-bottom{

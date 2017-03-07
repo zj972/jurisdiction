@@ -4,10 +4,11 @@ import Application from '@/components/Application'
 import Individual from '@/components/Individual'
 import Approval from '@/components/Approval'
 import Manage from '@/components/Manage'
+import AddRoles from '@/components/AddRoles'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/Application',
@@ -27,8 +28,16 @@ export default new Router({
     {
       path: '/Manage',
       name: 'Manage',
-      component: Manage
+      component: Manage,
+      children: [
+        {
+          path: 'AddRoles',
+          name: 'AddRoles',
+          component: AddRoles
+        }
+      ]
     }
-  ]
+  ],
+  mode: 'history'
 })
-
+export default router

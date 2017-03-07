@@ -15,7 +15,6 @@ Vue.use(ElementUI)
 new Vue({
   el: '#app',
   router,
-  mode: history,
   template: '<App/>',
   components: { App }
 })
