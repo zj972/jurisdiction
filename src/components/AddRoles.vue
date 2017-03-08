@@ -1,3 +1,4 @@
+<!-- 添加角色 -> 子组件 -->
 <template>
   <div class="AddRoles">
     <el-row>
@@ -32,20 +33,23 @@
     <el-row>
       <el-col :span="6">已选菜单</el-col>
       <el-col :span="18">
-        <el-table>
+        <el-table :data="tableData">
           <el-table-column
             prop="firstMenu"
-            label="一级菜单">
+            label="一级菜单"
+            align="center">
           </el-table-column>
           <el-table-column
             prop="secondMenu"
-            label="二级菜单">
+            label="二级菜单"
+            align="center">
           </el-table-column>
           <el-table-column
             prop="operation"
-            label="操作">
+            label="操作"
+            align="center">
             <template scope="scope">
-              <el-button @click.native.prevent="delRow(scope.$index, tableDataAdd)" size="small">
+              <el-button @click.native.prevent="delRow(scope.$index, tableData)" size="small">
                 删除
               </el-button>
             </template>
@@ -77,6 +81,8 @@ export default {
       secondMenu: '',
       textarea: '',
       disable: true,
+      firstValue: '',
+      secondValue: '',
       firstOptions: [
         {
           value: '选项11',
@@ -170,7 +176,8 @@ export default {
           ]
         }
       ],
-      secondOptions: []
+      secondOptions: [],
+      tableData: []
     }
   },
   methods: {
@@ -178,6 +185,7 @@ export default {
       rows.splice(index, 1)
     },
     toSecond (value) {
+      this.firstValue = value
       this.disable = false
       for (let list of this.firstOptions) {
         if (list.value === value) {
@@ -186,7 +194,11 @@ export default {
       }
     },
     addList (value) {
-
+      this.secondValue = value
+      this.tableData.push({
+        firstMenu: this.firstValue,
+        secondMenu: this.secondValue
+      })
     }
   }
 }

@@ -4,7 +4,9 @@ import Application from '@/components/Application'
 import Individual from '@/components/Individual'
 import Approval from '@/components/Approval'
 import Manage from '@/components/Manage'
-import AddRoles from '@/components/AddRoles'
+import ManageTable from '@/components/ManageTable'
+import MenuRole from '@/components/MenuRole'
+import MemberRole from '@/components/MemberRole'
 
 Vue.use(Router)
 
@@ -27,13 +29,19 @@ const router = new Router({
     },
     {
       path: '/Manage',
-      name: 'Manage',
       component: Manage,
       children: [
         {
-          path: 'AddRoles',
-          name: 'AddRoles',
-          component: AddRoles
+          path: '',
+          component: ManageTable
+        }, {
+          path: 'MenuRole',
+          name: 'MenuRole',
+          component: MenuRole
+        }, {
+          path: 'MemberRole',
+          name: 'MemberRole',
+          component: MemberRole
         }
       ]
     }
