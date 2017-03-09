@@ -2,6 +2,12 @@
 
 > permission management system
 
+# 待解决的问题
+
+1.在子路里切换父路由会叠加url
+
+2.添加角色清除input框数据
+
 ## Build Setup
 
 ``` bash
