@@ -8,6 +8,8 @@
 
 >2.添加角色清除input框数据
 
+>3.动态修改table样式
+
 ## Build Setup
 
 ``` bash
