@@ -148,6 +148,8 @@ export default {
 .button .el-select{
   width: 100%;
 }
+</style>
+<style>
 .el-table .info-row{
   background: #c9e5f5;
 }

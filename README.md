@@ -8,8 +8,16 @@
 
 >2.添加角色清除input框数据
 
->3.动态修改table样式
+## 已解决的问题
 
+>1.动态修改table样式
+>  由于style标签上添加了scope属性，动态生成的class后的标签并没有scope属性，所以无法渲染css
+```
+.content .el-row[data-v-5ef3af1c]{
+  margin: 15px 0;
+}
+<div data-v-fe5c137a class="el-row button"></div>
+```
 ## Build Setup
 
 ``` bash

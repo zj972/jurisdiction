@@ -1,3 +1,4 @@
+<!-- 权限管理 -> 二级路由 -->
 <template>
   <div class="Manage">
     <el-tabs value="role">
@@ -20,8 +21,8 @@
           </el-col>
           <el-col :xs="24" :sm="4" :md="3" :lg="2">
             <el-row><el-col>
-              <el-button icon="plus" @click="dialogVisible = true" style="width: 100%">添加角色</el-button>
-              <el-dialog title="添加角色" v-model="dialogVisible" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+              <el-button icon="plus" @click="dialogVisibleAdd = true" style="width: 100%">添加角色</el-button>
+              <el-dialog title="添加角色" v-model="dialogVisibleAdd" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
                 <add-roles></add-roles>
                 <span slot="footer" class="dialog-footer">
                   <el-button @click="cancelRoles">取 消</el-button>
@@ -56,10 +57,17 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" align="center" width="140">
             <template scope="scope">
-              <el-button @click.native.prevent="alertRow(scope.$index, tableDataAdd)" size="small">
+              <el-button @click.native.prevent="alertRow(scope.$index, tableRole)" size="small">
                 修改
               </el-button>
-              <el-button @click.native.prevent="delRow(scope.$index, tableDataAdd)" size="small">
+              <el-dialog title="修改角色" v-model="dialogVisibleModify" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+                <modify></modify>
+                <span slot="footer" class="dialog-footer">
+                  <el-button @click="cancelRoles">取 消</el-button>
+                  <el-button type="primary" @click="modify">确 定</el-button>
+                </span>
+              </el-dialog>
+              <el-button @click.native.prevent="delRow(scope.$index, tableRole)" size="small">
                 删除
               </el-button>
             </template>
@@ -80,7 +88,10 @@
         <el-table :data="tableMember" border style="width: 100%">
           <el-table-column prop="id" label="用户ID" align="center" width="80">
           </el-table-column>
-          <el-table-column prop="name" label="用户姓名" align="center">
+          <el-table-column label="用户姓名" align="center">
+            <template scope="scope">
+            {{tableMember[scope.$index].name}}（{{tableMember[scope.$index].englishName}}）
+            </template>
           </el-table-column>
           <el-table-column prop="role" label="用户角色" align="center">
           </el-table-column>
@@ -90,10 +101,10 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" align="center" width="200">
             <template scope="scope">
-              <el-button @click.native.prevent="menuMember(scope.$index, tableDataAdd)" size="small">
+              <el-button @click.native.prevent="menuMember(scope, tableMember)" size="small">
                 菜单管理
               </el-button>
-              <el-button @click.native.prevent="operate(scope.$index, tableDataAdd)" size="small">
+              <el-button @click.native.prevent="operate(scope.$index, tableMember)" size="small">
                 操作权限
               </el-button>
             </template>
@@ -106,10 +117,12 @@
 
 <script>
 import AddRoles from './AddRoles'
+import Modify from './Modify'
 
 export default {
   components: {
-    AddRoles
+    AddRoles,
+    Modify
   },
   name: 'Manage',
   data () {
@@ -117,7 +130,8 @@ export default {
       inputRole: '',
       inputMember: '',
       inputSearch: '',
-      dialogVisible: false,
+      dialogVisibleAdd: false,
+      dialogVisibleModify: false,
       tableRoleData: [
         {
           id: 1,
@@ -160,31 +174,36 @@ export default {
       tableMemberData: [
         {
           id: 1,
-          name: '杨少波（SarboYang）',
+          name: '杨少波',
+          englishName: 'SarboYang',
           role: '超级管理员',
           department: '数据支付部/支付组/Web前端组',
           time: '2017-03-17 22:25:22'
         }, {
           id: 2,
-          name: '张磊（zhanglei）',
+          name: '张磊',
+          englishName: 'zhanglei',
           role: '管理员',
           department: '数据支付部/支付组/Web前端组',
           time: '2017-03-17 22:23:22'
         }, {
           id: 3,
-          name: '杨少波（SarboYang）',
+          name: '杨少波',
+          englishName: 'SarboYang',
           role: '运营/产品人员',
           department: '数据支付部/支付组/Web前端组',
           time: '2017-03-17 22:12:22'
         }, {
           id: 4,
-          name: '杨少波（SarboYang）',
+          name: '杨少波',
+          englishName: 'SarboYang',
           role: '商务人员',
           department: '数据支付部/支付组/Web前端组',
           time: '2017-03-17 26:22:22'
         }, {
           id: 5,
-          name: '杨波（SarboYang）',
+          name: '杨波',
+          englishName: 'SarboYang',
           role: '客服人员',
           department: '数据支付部/支付组/Web前端组',
           time: '2017-03-97 22:22:82'
@@ -207,15 +226,21 @@ export default {
     },
     // 修改
     alertRow () {
-
+      this.dialogVisibleModify = true
+    },
+    modify () {
+      this.dialogVisibleModify = true
+    },
+    cancelModify () {
+      this.dialogVisibleModify = true
     },
     // 删除
     delRow (index, rows) {
 
     },
     // 菜单管理（成员管理页）
-    menuMember () {
-
+    menuMember (scope, rows) {
+      console.log(scope, rows)
     },
     // 操作权限
     operate () {
@@ -223,10 +248,10 @@ export default {
     },
     // 添加角色
     addRoles () {
-      this.dialogVisible = false
+      this.dialogVisibleAdd = false
     },
     cancelRoles () {
-      this.dialogVisible = false
+      this.dialogVisibleAdd = false
     }
   },
   computed: {
