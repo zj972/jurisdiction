@@ -1,6 +1,6 @@
 <!-- 权限管理 -> 二级路由 -->
 <template>
-  <div class="Manage">
+  <div class="ManageIndex">
     <el-tabs value="role">
       <!-- 角色管理 -->
       <el-tab-pane label="角色管理" name="role">
@@ -23,7 +23,7 @@
             <el-row><el-col>
               <el-button icon="plus" @click="dialogVisibleAdd = true" style="width: 100%">添加角色</el-button>
               <el-dialog title="添加角色" v-model="dialogVisibleAdd" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
-                <add-roles></add-roles>
+                <role-add></role-add>
                 <span slot="footer" class="dialog-footer">
                   <el-button @click="cancelRoles">取 消</el-button>
                   <el-button type="primary" @click="addRoles">确 定</el-button>
@@ -39,14 +39,14 @@
           </el-table-column>
           <el-table-column label="菜单管理" align="center" width="120">
             <template scope="scope">
-              <el-button @click.native.prevent="menuRole(scope.$index, tableRoleData)" size="small">
+              <el-button @click.native.prevent="roleMenu(scope.$index, tableRoleData)" size="small">
                 菜单管理
               </el-button>
             </template>
           </el-table-column>
           <el-table-column label="成员管理" align="center" width="120">
             <template scope="scope">
-              <el-button @click.native.prevent="memberRole(scope.$index, tableRoleData)" size="small">
+              <el-button @click.native.prevent="roleMember(scope.$index, tableRoleData)" size="small">
                 成员管理
               </el-button>
             </template>
@@ -61,10 +61,10 @@
                 修改
               </el-button>
               <el-dialog title="修改角色" v-model="dialogVisibleModify" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
-                <modify></modify>
+                <RoleModify></RoleModify>
                 <span slot="footer" class="dialog-footer">
-                  <el-button @click="cancelRoles">取 消</el-button>
-                  <el-button type="primary" @click="modify">确 定</el-button>
+                  <el-button @click="cancelModify">取 消</el-button>
+                  <el-button type="primary" @click="RoleModify">确认修改</el-button>
                 </span>
               </el-dialog>
               <el-button @click.native.prevent="delRow(scope.$index, tableRole)" size="small">
@@ -104,7 +104,7 @@
               <el-button @click.native.prevent="menuMember(scope, tableMember)" size="small">
                 菜单管理
               </el-button>
-              <el-button @click.native.prevent="operate(scope.$index, tableMember)" size="small">
+              <el-button @click.native.prevent="memberOperation(scope.$index, tableMember)" size="small">
                 操作权限
               </el-button>
             </template>
@@ -116,15 +116,15 @@
 </template>
 
 <script>
-import AddRoles from './AddRoles'
-import Modify from './Modify'
+import RoleAdd from './RoleAdd'
+import RoleModify from './RoleModify'
 
 export default {
   components: {
-    AddRoles,
-    Modify
+    RoleAdd,
+    RoleModify
   },
-  name: 'Manage',
+  name: 'ManageIndex',
   data () {
     return {
       inputRole: '',
@@ -213,22 +213,22 @@ export default {
   },
   methods: {
     // 菜单管理（角色管理页）
-    menuRole (index, rows) {
+    roleMenu (index, rows) {
       console.log(this.$router)
       console.log(rows[index])
-      this.$router.push({name: 'MenuRole', query: {id: rows[index].id}})
+      this.$router.push({name: 'RoleMenu', query: {id: rows[index].id}})
     },
     // 成员管理
-    memberRole (index, rows) {
+    roleMember (index, rows) {
       console.log(this.$router)
       console.log(rows[index])
-      this.$router.push({name: 'MemberRole', query: {id: rows[index].id}})
+      this.$router.push({name: 'RoleMember', query: {id: rows[index].id}})
     },
     // 修改
-    alertRow () {
+    alertRow (index, rows) {
       this.dialogVisibleModify = true
     },
-    modify () {
+    RoleModify () {
       this.dialogVisibleModify = true
     },
     cancelModify () {
@@ -239,12 +239,16 @@ export default {
 
     },
     // 菜单管理（成员管理页）
-    menuMember (scope, rows) {
-      console.log(scope, rows)
+    menuMember (index, rows) {
+      console.log(this.$router)
+      console.log(rows[index])
+      this.$router.push({name: 'MemberMenu'})
     },
     // 操作权限
-    operate () {
-
+    memberOperation (index, rows) {
+      console.log(this.$router)
+      console.log(rows[index])
+      this.$router.push({name: 'MemberOperation'})
     },
     // 添加角色
     addRoles () {
@@ -297,21 +301,21 @@ export default {
         }
       }
       let memberData = this.tableMemberData.slice()
-      let memberRole = []
+      let roleMember = []
       if (member) {
         console.log(this.tableMemberData)
         for (let i = 0; i < memberData.length; i++) {
           let judge = false
           judge = judge || (new RegExp(member).test(memberData[i].name))
           if (judge) {
-            memberRole.push(memberData[i].role)
+            roleMember.push(memberData[i].role)
           }
         }
-        console.log(memberRole)
+        console.log(roleMember)
         for (let i = 0; i < roleData.length;) {
           let judge = false
-          for (let j = 0; j < memberRole.length; j++) {
-            if (roleData[i].role === memberRole[j]) {
+          for (let j = 0; j < roleMember.length; j++) {
+            if (roleData[i].role === roleMember[j]) {
               judge = true
             }
           }

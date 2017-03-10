@@ -1,6 +1,6 @@
-<!-- 菜单管理 -> 二级路由 -->
+<!-- 权限管理 -> 成员管理 -> 菜单管理 -> 二级路由 -->
 <template>
-  <div class="MenuRole">
+  <div class="MemberMenu">
     <el-row>
       <el-button type="text"><router-link to="/Manage"><i class="el-icon-arrow-left"></i></router-link></el-button>
       {{role}}
@@ -60,10 +60,9 @@
 
 <script>
 export default {
-  name: 'MenuRole',
+  name: 'MemberMenu',
   data () {
     return {
-      msg: 'Welcome to MenuRole.vue',
       role: '产品/运营人员',
       firstMenu: '',
       secondMenu: '',
@@ -139,7 +138,7 @@ export default {
 </script>
 
 <style scoped>
-.MenuRole{
+.MemberMenu{
   margin: 10px;
 }
 .button>.el-col{

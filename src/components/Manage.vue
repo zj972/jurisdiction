@@ -6,14 +6,7 @@
 </template>
 
 <script>
-import ManageTable from './ManageTable'
-import MenuRole from './MenuRole'
-
 export default {
-  components: {
-    ManageTable,
-    MenuRole
-  },
   name: 'Manage'
 }
 </script>

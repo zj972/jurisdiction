@@ -8,6 +8,8 @@
 
 >2.添加角色清除input框数据
 
+>3.遮罩层处于弹出框的上方
+
 ## 已解决的问题
 
 >1.动态修改table样式
@@ -18,6 +20,7 @@
 }
 <div data-v-fe5c137a class="el-row button"></div>
 ```
+
 ## Build Setup
 
 ``` bash

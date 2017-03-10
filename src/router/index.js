@@ -3,10 +3,15 @@ import Router from 'vue-router'
 import Application from '@/components/Application'
 import Individual from '@/components/Individual'
 import Approval from '@/components/Approval'
+// 权限管理 -> 一级路由
 import Manage from '@/components/Manage'
-import ManageTable from '@/components/ManageTable'
-import MenuRole from '@/components/MenuRole'
-import MemberRole from '@/components/MemberRole'
+import ManageIndex from '@/components/ManageIndex'
+// 权限管理 -> 角色管理 -> 二级路由
+import RoleMenu from '@/components/RoleMenu'
+import RoleMember from '@/components/RoleMember'
+// 权限管理 -> 成员管理 -> 二级路由
+import MemberMenu from '@/components/MemberMenu'
+import MemberOperation from '@/components/MemberOperation'
 
 Vue.use(Router)
 
@@ -33,15 +38,23 @@ const router = new Router({
       children: [
         {
           path: '',
-          component: ManageTable
+          component: ManageIndex
         }, {
-          path: 'MenuRole',
-          name: 'MenuRole',
-          component: MenuRole
+          path: 'RoleMenu',
+          name: 'RoleMenu',
+          component: RoleMenu
         }, {
-          path: 'MemberRole',
-          name: 'MemberRole',
-          component: MemberRole
+          path: 'RoleMember',
+          name: 'RoleMember',
+          component: RoleMember
+        }, {
+          path: 'MemberMenu',
+          name: 'MemberMenu',
+          component: MemberMenu
+        }, {
+          path: 'MemberOperation',
+          name: 'MemberOperation',
+          component: MemberOperation
         }
       ]
     }

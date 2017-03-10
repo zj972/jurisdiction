@@ -1,6 +1,6 @@
-<!-- 修改角色 -> 子组件 -->
+<!-- 权限管理 -> 角色管理 -> 修改角色 -> 子组件 -->
 <template>
-  <div class="Modify">
+  <div class="RoleModify">
     <el-row>
       <el-col :span="6">角色</el-col>
       <el-col :span="18">
@@ -73,7 +73,7 @@
 
 <script>
 export default {
-  name: 'Modify',
+  name: 'RoleModify',
   data () {
     return {
       role: '',

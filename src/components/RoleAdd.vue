@@ -1,6 +1,6 @@
-<!-- 添加角色 -> 子组件 -->
+<!-- 权限管理 -> 角色管理 -> 添加角色 -> 子组件 -->
 <template>
-  <div class="AddRoles">
+  <div class="RoleAdd">
     <el-row>
       <el-col :span="6">角色</el-col>
       <el-col :span="18">
@@ -73,7 +73,7 @@
 
 <script>
 export default {
-  name: 'AddRoles',
+  name: 'RoleAdd',
   data () {
     return {
       role: '',

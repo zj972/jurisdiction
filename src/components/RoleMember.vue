@@ -1,6 +1,6 @@
-<!-- 成员管理 -> 二级路由 -->
+<!-- 权限管理 -> 角色管理 -> 成员管理 -> 二级路由 -->
 <template>
-  <div class="MenuRole">
+  <div class="RoleMember">
     <el-row>
       <el-button type="text"><router-link to="/Manage"><i class="el-icon-arrow-left"></i></router-link></el-button>
       {{role}}
@@ -53,10 +53,10 @@
 
 <script>
 export default {
-  name: 'MenuRole',
+  name: 'RoleMember',
   data () {
     return {
-      msg: 'Welcome to MenuRole.vue',
+      msg: 'Welcome to RoleMember.vue',
       role: '产品/运营人员',
       name: '',
       status: '',
@@ -119,7 +119,7 @@ export default {
 </script>
 
 <style scoped>
-.MenuRole{
+.RoleMember{
   margin: 10px;
 }
 .button>.el-col{
