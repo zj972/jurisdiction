@@ -1,36 +1,57 @@
 <!-- 权限管理 -> 成员管理 -> 菜单管理 -> 二级路由 -->
 <template>
   <div class="MemberMenu">
-    <el-row>
+    <el-row><el-col>
       <el-button type="text"><router-link to="/Manage"><i class="el-icon-arrow-left"></i></router-link></el-button>
-      {{role}}
-    </el-row>
+      <el-select v-model="firstMenu" placeholder="一级菜单请选择">
+        <el-option label="全部" value="all">全部</el-option>
+        <el-option
+          v-for="item in firstOptions"
+          :label="item.label"
+          :value="item.value"
+          :key="item.value">
+        </el-option>
+      </el-select>
+      <el-select v-model="secondMenu" placeholder="二级菜单请选择">
+        <el-option label="全部" value="all">全部</el-option>
+        <el-option
+          v-for="item in secondOptions"
+          :label="item.label"
+          :value="item.value"
+          :key="item.value">
+        </el-option>
+      </el-select>
+    </el-col></el-row>
     <el-row  class="button">
       <el-col :xs="24" :sm="24" :md="14" :lg="10">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-select v-model="firstMenu" placeholder="一级菜单请选择">
-              <el-option label="全部" value="all">全部</el-option>
-              <el-option
-                v-for="item in firstOptions"
-                :label="item.label"
-                :value="item.value"
-                :key="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="12">
-            <el-select v-model="secondMenu" placeholder="二级菜单请选择">
-              <el-option label="全部" value="all">全部</el-option>
-              <el-option
-                v-for="item in secondOptions"
-                :label="item.label"
-                :value="item.value"
-                :key="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
+        角色：{{role}}
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="10" :lg="14" align="right">
+        <el-button type="primary">批量添加</el-button>
+        <el-button type="primary">批量取消</el-button>
+        <el-checkbox>全选</el-checkbox>
+      </el-col>
+    </el-row>
+    <el-table :data="tableRole" border style="width: 100%" :row-class-name="tableRowClassName">
+      <el-table-column prop="id" label="ID" align="center">
+      </el-table-column>
+      <el-table-column prop="project" label="所属项目" align="center">
+      </el-table-column>
+      <el-table-column prop="firstMenu" label="一级菜单" align="center">
+      </el-table-column>
+      <el-table-column prop="secondMenu" label="二级菜单" align="center">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" align="center" width="140">
+        <template scope="scope">
+          <el-checkbox>
+            <span v-show="tableRoleData[scope.$index].operation">取消</span><span v-show="!tableRoleData[scope.$index].operation">添加</span>
+          </el-checkbox>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-row  class="button">
+      <el-col :xs="24" :sm="24" :md="14" :lg="10">
+        其他菜单：
       </el-col>
       <el-col :xs="24" :sm="24" :md="10" :lg="14" align="right">
         <el-button type="primary">批量添加</el-button>

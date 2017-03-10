@@ -20,8 +20,8 @@
             </el-row>
           </el-col>
           <el-col :xs="24" :sm="4" :md="3" :lg="2">
-            <el-row><el-col>
-              <el-button icon="plus" @click="dialogVisibleAdd = true" style="width: 100%">添加角色</el-button>
+            <el-row><el-col align="right">
+              <el-button icon="plus" @click="dialogVisibleAdd = true">添加角色</el-button>
               <el-dialog title="添加角色" v-model="dialogVisibleAdd" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
                 <role-add></role-add>
                 <span slot="footer" class="dialog-footer">
@@ -97,7 +97,7 @@
           </el-table-column>
           <el-table-column prop="department" label="所属部门" align="center">
           </el-table-column>
-          <el-table-column prop="time" label="最后登录时间" align="center">
+          <el-table-column prop="lastLoginTime" label="最后登录时间" align="center">
           </el-table-column>
           <el-table-column fixed="right" label="操作" align="center" width="200">
             <template scope="scope">
@@ -132,6 +132,7 @@ export default {
       inputSearch: '',
       dialogVisibleAdd: false,
       dialogVisibleModify: false,
+      url: '../assets/json/get.json',
       tableRoleData: [
         {
           id: 1,
@@ -178,35 +179,35 @@ export default {
           englishName: 'SarboYang',
           role: '超级管理员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:25:22'
+          lastLoginTime: '2017-03-17 22:25:22'
         }, {
           id: 2,
           name: '张磊',
           englishName: 'zhanglei',
           role: '管理员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:23:22'
+          lastLoginTime: '2017-03-17 22:23:22'
         }, {
           id: 3,
           name: '杨少波',
           englishName: 'SarboYang',
           role: '运营/产品人员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 22:12:22'
+          lastLoginTime: '2017-03-17 22:12:22'
         }, {
           id: 4,
           name: '杨少波',
           englishName: 'SarboYang',
           role: '商务人员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-17 26:22:22'
+          lastLoginTime: '2017-03-17 26:22:22'
         }, {
           id: 5,
           name: '杨波',
           englishName: 'SarboYang',
           role: '客服人员',
           department: '数据支付部/支付组/Web前端组',
-          time: '2017-03-97 22:22:82'
+          lastLoginTime: '2017-03-97 22:22:82'
         }
       ]
     }
@@ -256,6 +257,13 @@ export default {
     },
     cancelRoles () {
       this.dialogVisibleAdd = false
+    },
+    // 初始化页面，请求数据
+    initialize () {
+      this.$http.get(this.url).then((response) => {
+        alert('hei')
+        console.log(response.data)
+      })
     }
   },
   computed: {
@@ -328,6 +336,10 @@ export default {
       }
       return roleData
     }
+  },
+  ready () {
+    console.log('this is ready')
+    // this.initialize()
   }
 }
 </script>

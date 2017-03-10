@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column prop="englishName" label="英文名" align="center">
       </el-table-column>
-      <el-table-column prop="department" label="所属项目" align="center">
+      <el-table-column prop="department" label="所属部门" align="center">
       </el-table-column>
       <el-table-column fixed="right" label="操作" align="center" width="140">
         <template scope="scope">
