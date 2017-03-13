@@ -1,0 +1,198 @@
+{
+  "get": {
+    "manageIndex": {
+      "role": [{
+        "id": 1,
+        "role": "",
+        "checked": "",
+        "remark": ""
+      },{},{}],
+      "member": [{
+        "id": 1,
+        "name": "",
+        "englishName": "",
+        "role": "",
+        "department": "",
+        "lastLoginTime": ""
+      },{},{}]
+    },
+    "roleAdd": [{
+        "firstMenu": "",
+        "secondMenu": []
+    },{},{}],
+    "roleMenu": {
+      "roleMenu": [{
+        "id": 1,
+        "project": "",
+        "firstMenu": "",
+        "secondMenu": "",
+        "operation": true
+      },{},{}]
+    },
+    "roleMember": {
+      "roleMember": [{
+        "id": 1,
+        "name": "",
+        "englishName": "",
+        "department": "",
+        "operation": true
+      },{},{}]
+    },
+    "memberMenu": {
+      "roleMenu": [{
+        "id": 1,
+        "project": "",
+        "firstMenu": "",
+        "secondMenu": "",
+        "operation": true
+      },{},{}],
+      "otherMenu": [{
+        "id": 1,
+        "project": "",
+        "firstMenu": "",
+        "secondMenu": "",
+        "operation": true
+      },{},{}]
+    },
+    "memberOperation": {
+      "memberOperationSelection": {
+        "title": [{
+          "label": "游戏",
+          "prop": "game"
+        }, {
+          "label": "平台",
+          "prop": "platform"
+        }, {
+          "label": "大厅",
+          "prop": "hall"
+        }, {
+          "label": "终端",
+          "prop": "terminal"
+        }, {
+          "label": "应用包",
+          "prop": "package"
+        }, {
+          "label": "APPID应用",
+          "prop": "appid"
+        }],
+        "data": [{
+          "game": "德州扑克",
+          "platform": "",
+          "hall": "",
+          "terminal": "PC",
+          "package": "新浪微博",
+          "appid": "简体（1232）"
+        }, {
+          "game": "德州扑克",
+          "platform": "",
+          "hall": "",
+          "terminal": "PC",
+          "package": "新浪微博",
+          "appid": "简体（1232）"
+        },{},{}]
+      },
+      "nemberOperation": [{
+        "game": "德州扑克",
+        "platform": "",
+        "hall": "",
+        "terminal": "PC",
+        "package": "新浪微博",
+        "appid": "简体（1232）",
+        "verifier": {
+          "name": "",
+          "english": ""
+        }
+      },{},{}]
+    }
+  },
+  "set": {
+    "manageIndex": {
+      "roleAdd": {
+        "role": "",
+        "menu": [{
+          "firstMenu": "",
+          "secondMenu": []
+        },{},{}],
+        "remark": ""
+      },
+      "roleAlter": {
+        "id": "",
+        "role": "",
+        "menu": [{
+          "firstMenu": "",
+          "secondMenu": []
+        },{},{}],
+        "remark": ""
+      },
+      "roleDel": {
+        "id": 1
+      }
+    },
+    "roleMenu": {
+      "roleMenu": {
+        "id": 1
+      },
+      "roleMenuAdd": {
+        "id": 1,
+        "menuId": [1,2]
+      },
+      "roleMenuDel": {
+        "id": 1,
+        "menuId": [1,2]
+      }
+    },
+    "roleMember": {
+      "roleMember": {
+        "id": 1
+      },
+      "roleMemberAdd": {
+        "id": 1,
+        "memberId": [1,2]
+      },
+      "roleMemberDel": {
+        "id": 1,
+        "memberId": [1,2]
+      }
+    },
+    "memberMenu": {
+      "memberMenu": {
+        "id": 1
+      },
+      "roleMenuAdd": {
+        "id": 1,
+        "menuId": [1,2]
+      },
+      "roleMenuDel": {
+        "id": 1,
+        "menuId": [1,2]
+      },
+      "otherMenuAdd": {
+        "id": 1,
+        "menuId": [1,2]
+      },
+      "otherMenuDel": {
+        "id": 1,
+        "menuId": [1,2]
+      }
+    },
+    "memberOperation": {
+      "memberOperation": {
+        "id": 1
+      },
+      "memberOperationAlert": {
+        "id": 1,
+        "data": [{
+          "id": 1,
+          "content": {
+            "indent": true,
+            "xxx": false
+          }
+        },{},{}]
+      },
+      "memberOperationDel": {
+        "id": 1,
+        "data": [1,2]
+      }
+    }
+  }
+}

@@ -132,7 +132,6 @@ export default {
       inputSearch: '',
       dialogVisibleAdd: false,
       dialogVisibleModify: false,
-      url: '../assets/json/get.json',
       tableRoleData: [
         {
           id: 1,
@@ -260,9 +259,10 @@ export default {
     },
     // 初始化页面，请求数据
     initialize () {
-      this.$http.get(this.url).then((response) => {
-        alert('hei')
-        console.log(response.data)
+      this.$http.get('/static/port.json').then((response) => {
+        console.log(response)
+      }, (response) => {
+        // error callback
       })
     }
   },
@@ -337,9 +337,8 @@ export default {
       return roleData
     }
   },
-  ready () {
-    console.log('this is ready')
-    // this.initialize()
+  mounted () {
+    this.initialize()
   }
 }
 </script>

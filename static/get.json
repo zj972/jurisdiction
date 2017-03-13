@@ -1,5 +1,4 @@
 {
-  // 页面加载
   "manageIndex": {
     "role": [{
       "id": 1,
@@ -16,7 +15,6 @@
       "lastLoginTime": ""
     },{},{}]
   },
-  // 传入角色ID
   "roleMenu": {
     "roleMenu": {
       "name": "",
@@ -29,7 +27,6 @@
       },{},{}]
     }
   },
-  // 传入角色ID
   "roleMember": {
     "roleMember": {
       "name": "",
@@ -42,7 +39,6 @@
       },{},{}]
     }
   },
-  // 传入用户ID
   "memberMenu": {
     "roleMenu": {
       "name": "",
@@ -62,7 +58,6 @@
       "operation": true
     },{},{}]
   },
-  // 传入用户ID
   "memberOperation": {
     "memberOperation": {
       "title": [
