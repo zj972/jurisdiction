@@ -48,18 +48,9 @@
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center" :show-overflow-tooltip="true" min-width="200">
           </el-table-column>
-          <el-table-column fixed="right" label="操作" align="center" width="140">
+          <el-table-column label="操作" align="center" width="140"><!--  fixed="right" -->
             <template scope="scope">
-              <el-button @click.native.prevent="alertRow(scope.$index, tableRole)" size="small">
-                修改
-              </el-button>
-              <el-dialog title="修改角色" v-model="dialogVisibleModify" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
-                <RoleModify></RoleModify>
-                <span slot="footer" class="dialog-footer">
-                  <el-button @click="cancelModify">取 消</el-button>
-                  <el-button type="primary" @click="RoleModify">确认修改</el-button>
-                </span>
-              </el-dialog>
+              <role-modify :id="tableRole[scope.$index].id"></role-modify>
               <el-button @click.native.prevent="roleDel(scope.$index, tableRole)" size="small">
                 删除
               </el-button>
@@ -105,6 +96,7 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
+
   </div>
 </template>
 
@@ -125,8 +117,7 @@ export default {
       tableMemberData: [],
       inputRole: '',
       inputMember: '',
-      inputSearch: '',
-      dialogVisibleModify: false
+      inputSearch: ''
     }
   },
   methods: {
@@ -143,14 +134,8 @@ export default {
       this.$router.push({name: 'RoleMember', query: {id: rows[index].id}})
     },
     // 修改
-    alertRow (index, rows) {
-      this.dialogVisibleModify = true
-    },
-    RoleModify () {
-      this.dialogVisibleModify = true
-    },
-    cancelModify () {
-      this.dialogVisibleModify = true
+    alertRow () {
+      console.log('这里是父alertRow：')
     },
     // 删除
     roleDel (index, rows) {
@@ -191,15 +176,6 @@ export default {
       console.log(this.$router)
       console.log(rows[index])
       this.$router.push({name: 'MemberOperation'})
-    },
-    // 初始化页面，请求数据
-    initialize () {
-      this.$http.get('http://localhost:3000/manageIndex').then((response) => {
-        this.tableRoleData = response.data.role.slice()
-        this.tableMemberData = response.data.member.slice()
-      }, (response) => {
-        // error callback
-      })
     }
   },
   computed: {
@@ -273,8 +249,14 @@ export default {
       return roleData
     }
   },
+  // 初始化
   mounted () {
-    this.initialize()
+    this.$http.get('http://localhost:3000/manageIndex').then((response) => {
+      this.tableRoleData = response.data.role.slice()
+      this.tableMemberData = response.data.member.slice()
+    }, (response) => {
+      // error callback
+    })
   }
 }
 </script>

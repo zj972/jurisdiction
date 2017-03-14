@@ -15,7 +15,7 @@
           <el-row type="flex" justify="space-between">
             <el-cascader
               :options="options"
-              v-model="selectedOptions"
+              v-model="optionsData"
               @change="handleChange">
             </el-cascader>
           </el-row>
@@ -24,7 +24,7 @@
       <el-row>
         <el-col :span="6">已选菜单</el-col>
         <el-col :span="18">
-          <el-table :data="tableData">
+          <el-table :data="menuData">
             <el-table-column
               prop="firstMenu"
               label="一级菜单"
@@ -40,7 +40,7 @@
               label="操作"
               align="center">
               <template scope="scope">
-                <el-button @click.native.prevent="delRow(scope.$index, tableData)" size="small">
+                <el-button @click.native.prevent="delRow(scope.$index, menuData)" size="small">
                   删除
                 </el-button>
               </template>
@@ -60,7 +60,7 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelRoles">取 消</el-button>
+        <el-button @click="roleAddCancel">取 消</el-button>
         <el-button type="primary" @click="roleAddSubmit">确 定</el-button>
       </span>
     </el-dialog>
@@ -77,12 +77,33 @@ export default {
       secondMenu: '',
       remark: '',
       dialogVisibleAdd: false,
-      selectedOptions: [],
+      optionsData: [],
       options: [],
-      tableData: []
+      menuData: []
     }
   },
   methods: {
+    // 添加菜单
+    handleChange (value) {
+      let one = value[0]
+      let two = value[1]
+      let obj = {
+        firstMenu: one,
+        secondMenu: two
+      }
+      this.menuData.push(obj)
+      for (let data of this.options) {
+        if (data.value === one) {
+          for (let i = 0; i < data.children.length; i++) {
+            if (data.children[i].value === two) {
+              data.children[i].disabled = true
+            }
+          }
+        }
+      }
+      this.optionsData = []
+    },
+    // 删除菜单
     delRow (index, rows) {
       let array = rows[index]
       for (let data of this.options) {
@@ -96,30 +117,10 @@ export default {
       }
       rows.splice(index, 1)
     },
-    handleChange (value) {
-      let one = value[0]
-      let two = value[1]
-      let obj = {
-        firstMenu: one,
-        secondMenu: two
-      }
-      this.tableData.push(obj)
-      for (let data of this.options) {
-        if (data.value === one) {
-          for (let i = 0; i < data.children.length; i++) {
-            if (data.children[i].value === two) {
-              data.children[i].disabled = true
-            }
-          }
-        }
-      }
-      this.selectedOptions = []
-    },
     // 添加角色
     roleAdd () {
-      this.$http.get('http://localhost:3000/roleAdd').then((response) => {
-        this.options = response.data.roleAdd.slice()
-        this.dialogVisibleAdd = true
+      this.$http.get('http://localhost:3000/roleAdd').then((res) => {
+        this.options = res.data.menu.slice()
         for (let data of this.options) {
           data.label = data.value
           if (data.children) {
@@ -132,29 +133,31 @@ export default {
             }
           }
         }
-      }, (response) => {
+        this.dialogVisibleAdd = true
+      }, (res) => {
         // error callback
         this.$message.error('服务器异常！')
       })
     },
+    // 提交
     roleAddSubmit () {
       if (this.role === '') {
         this.$message.error('角色不能为空！')
         return
       }
-      if (this.tableData.length === 0) {
+      if (this.menuData.length === 0) {
         this.$message.error('菜单不能为空！')
         return
       }
       this.$http.post('http://localhost:3000/roleAddSubmit', {
         'role': this.role,
-        'menuData': this.tableData,
+        'menuData': this.menuData,
         'remark': this.remark
-      }).then((response) => {
-        if (response.data.msg) {
+      }).then((res) => {
+        if (res.data.msg) {
           this.role = ''
           this.remark = ''
-          this.tableData = []
+          this.menuData = []
           this.$message({
             message: '提交成功！',
             type: 'success'
@@ -162,17 +165,19 @@ export default {
         } else {
           this.$message.error('服务器异常！')
         }
-      }, (response) => {
+      }, (res) => {
         // error callback
         this.$message.error('服务器异常！')
       })
       this.dialogVisibleAdd = false
     },
-    cancelRoles () {
+    // 取消
+    roleAddCancel () {
       this.role = ''
       this.remark = ''
-      this.tableData = []
+      this.menuData = []
       this.dialogVisibleAdd = false
+      this.$message('已取消添加！')
     }
   }
 }

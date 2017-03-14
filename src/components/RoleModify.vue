@@ -1,73 +1,71 @@
 <!-- 权限管理 -> 角色管理 -> 修改角色 -> 子组件 -->
 <template>
   <div class="RoleModify">
-    <el-row>
-      <el-col :span="6">角色</el-col>
-      <el-col :span="18">
-      <el-input v-model="role" placeholder="请输入内容"></el-input>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="6">菜单选择</el-col>
-      <el-col :span="18">
-        <el-row type="flex" justify="space-between">
-        <el-select v-model="firstMenu" placeholder="一级菜单请选择" @change="toSecond">
-          <el-option
-            v-for="item in firstOptions"
-            :label="item.label"
-            :value="item.value"
-            :key="item.value">
-          </el-option>
-        </el-select>
-        <el-select v-model="secondMenu" :disabled="disable" placeholder="二级菜单请选择" @change="addList">
-          <el-option
-            v-for="item in secondOptions"
-            :label="item.label"
-            :value="item.value"
-            :key="item.value">
-          </el-option>
-        </el-select>
-        </el-row>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="6">已选菜单</el-col>
-      <el-col :span="18">
-        <el-table :data="tableData">
-          <el-table-column
-            prop="firstMenu"
-            label="一级菜单"
-            align="center">
-          </el-table-column>
-          <el-table-column
-            prop="secondMenu"
-            label="二级菜单"
-            align="center">
-          </el-table-column>
-          <el-table-column
-            prop="operation"
-            label="操作"
-            align="center">
-            <template scope="scope">
-              <el-button @click.native.prevent="delRow(scope.$index, tableData)" size="small">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="6">备注</el-col>
-      <el-col :span="18">
-        <el-input
-          type="textarea"
-          :rows="4"
-          placeholder="请输入内容"
-          v-model="textarea">
-        </el-input>
-      </el-col>
-    </el-row>
+    <el-button @click="open()" size="small">
+      修改
+    </el-button>
+    <el-dialog title="修改角色" v-model="dialogVisibleModify" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+      <el-row>
+        <el-col :span="6">角色</el-col>
+        <el-col :span="18">
+        <el-input v-model="role" placeholder="请输入内容"></el-input>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">菜单选择</el-col>
+        <el-col :span="18">
+          <el-row type="flex" justify="space-between">
+            <el-cascader
+              :options="options"
+              v-model="optionsData"
+              @change="handleChange">
+            </el-cascader>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">已选菜单</el-col>
+        <el-col :span="18">
+          <el-table :data="menuData">
+            <el-table-column
+              prop="firstMenu"
+              label="一级菜单"
+              align="center">
+            </el-table-column>
+            <el-table-column
+              prop="secondMenu"
+              label="二级菜单"
+              align="center">
+            </el-table-column>
+            <el-table-column
+              prop="operation"
+              label="操作"
+              align="center">
+              <template scope="scope">
+                <el-button @click.native.prevent="delRow(scope.$index, menuData)" size="small">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">备注</el-col>
+        <el-col :span="18">
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入内容"
+            v-model="remark">
+          </el-input>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="roleModifyCancel">取 消</el-button>
+        <el-button type="primary" @click="roleModifySubmit">确认修改</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -79,132 +77,132 @@ export default {
       role: '',
       firstMenu: '',
       secondMenu: '',
-      textarea: '',
-      disable: true,
-      firstValue: '',
-      secondValue: '',
-      firstOptions: [
-        {
-          value: '选项11',
-          label: '黄金糕',
-          children: [
-            {
-              value: '选项21',
-              label: '双皮奶'
-            }, {
-              value: '选项22',
-              label: '双皮奶'
-            }, {
-              value: '选项23',
-              label: '双皮奶'
-            }, {
-              value: '选项24',
-              label: '双皮奶'
-            }
-          ]
-        }, {
-          value: '选项12',
-          label: '双皮奶',
-          children: [
-            {
-              value: '选项31',
-              label: '双皮1奶'
-            }, {
-              value: '选项32',
-              label: '双皮2奶'
-            }, {
-              value: '选项33',
-              label: '双皮3奶'
-            }, {
-              value: '选项34',
-              label: '双皮4奶'
-            }
-          ]
-        }, {
-          value: '选项13',
-          label: '蚵仔煎',
-          children: [
-            {
-              value: '选项21',
-              label: '双3皮奶'
-            }, {
-              value: '选项22',
-              label: '双45皮奶'
-            }, {
-              value: '选项23',
-              label: '双12皮奶'
-            }, {
-              value: '选项24',
-              label: '双23皮奶'
-            }
-          ]
-        }, {
-          value: '选项14',
-          label: '龙须面',
-          children: [
-            {
-              value: '选项21',
-              label: '双3皮奶'
-            }, {
-              value: '选项22',
-              label: '双45皮奶'
-            }, {
-              value: '选项23',
-              label: '双12皮奶'
-            }, {
-              value: '选项24',
-              label: '双23皮奶'
-            }
-          ]
-        }, {
-          value: '选项15',
-          label: '北京烤鸭',
-          children: [
-            {
-              value: '选项21',
-              label: '双3皮奶'
-            }, {
-              value: '选项22',
-              label: '双45皮奶'
-            }, {
-              value: '选项23',
-              label: '双12皮奶'
-            }, {
-              value: '选项24',
-              label: '双23皮奶'
-            }
-          ]
-        }
-      ],
-      secondOptions: [],
-      tableData: []
+      remark: '',
+      dialogVisibleModify: false,
+      optionsData: [],
+      options: [],
+      menuData: []
     }
   },
+  props: ['id'],
   methods: {
-    delRow (index, rows) {
-      rows.splice(index, 1)
-    },
-    toSecond (value) {
-      this.firstValue = value
-      this.disable = false
-      for (let list of this.firstOptions) {
-        if (list.value === value) {
-          this.secondOptions = list.children.slice()
+    // 添加菜单
+    handleChange (value) {
+      let one = value[0]
+      let two = value[1]
+      let obj = {
+        firstMenu: one,
+        secondMenu: two
+      }
+      this.menuData.push(obj)
+      for (let data of this.options) {
+        if (data.value === one) {
+          for (let i = 0; i < data.children.length; i++) {
+            if (data.children[i].value === two) {
+              data.children[i].disabled = true
+            }
+          }
         }
       }
+      this.optionsData = []
     },
-    addList (value) {
-      this.secondValue = value
-      this.tableData.push({
-        firstMenu: this.firstValue,
-        secondMenu: this.secondValue
+    // 删除菜单
+    delRow (index, rows) {
+      let array = rows[index]
+      for (let data of this.options) {
+        if (data.value === array.firstMenu) {
+          for (let i = 0; i < data.children.length; i++) {
+            if (data.children[i].value === array.secondMenu) {
+              data.children[i].disabled = ''
+            }
+          }
+        }
+      }
+      rows.splice(index, 1)
+    },
+    // 修改角色
+    open () {
+      this.$http.get('http://localhost:3000/roleModify?id=' + this.id).then((res) => {
+        this.role = res.data.role
+        this.menuData = res.data.menuData
+        this.remark = res.data.remark
+        this.options = res.data.menu.slice()
+        for (let data of this.options) {
+          data.label = data.value
+          if (data.children) {
+            for (let i = 0; i < data.children.length; i++) {
+              let value = data.children[i]
+              data.children[i] = {
+                'value': value,
+                'label': value
+              }
+            }
+          }
+        }
+        console.log(this.menuData[0].secondMenu)
+        for (let i = 0; i < this.menuData.length; i++) {
+          for (let data of this.options) {
+            if (data.value === this.menuData[i].firstMenu) {
+              for (let j = 0; j < data.children.length; j++) {
+                if (data.children[j].value === this.menuData[i].secondMenu) {
+                  data.children[j].disabled = true
+                }
+              }
+            }
+          }
+        }
+        this.dialogVisibleModify = true
+      }, (res) => {
+        // error callback
+        this.$message.error('服务器异常！')
       })
+    },
+    roleModifySubmit () {
+      if (this.role === '') {
+        this.$message.error('角色不能为空！')
+        return
+      }
+      if (this.menuData.length === 0) {
+        this.$message.error('菜单不能为空！')
+        return
+      }
+      this.$http.post('http://localhost:3000/roleModifySubmit', {
+        'role': this.role,
+        'menuData': this.menuData,
+        'remark': this.remark
+      }).then((res) => {
+        if (res.data.msg) {
+          this.role = ''
+          this.remark = ''
+          this.menuData = []
+          this.$message({
+            message: '提交成功！',
+            type: 'success'
+          })
+        } else {
+          this.$message.error('服务器异常！')
+        }
+      }, (res) => {
+        // error callback
+        this.$message.error('服务器异常！')
+      })
+      this.dialogVisibleModify = false
+    },
+    roleModifyCancel () {
+      this.role = ''
+      this.remark = ''
+      this.menuData = []
+      this.dialogVisibleModify = false
+      this.$message('已取消修改！')
     }
   }
 }
 </script>
 
 <style scoped>
+.RoleModify{
+  display: inline-block;
+}
 .el-row{
   line-height: 36px;
   border-bottom: 1px solid #dfe6ec;
