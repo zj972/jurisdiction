@@ -10,6 +10,8 @@
 
 >3.tabs首次切换时，table宽度跳动
 
+>4.弹出框复用
+
 ## 已解决的问题
 
 >1.动态修改table样式
@@ -26,8 +28,6 @@
 
 > 写入请求，在确认按钮事件触发时模拟form表单提交，server端返回成功后将v-model绑定的数据清空
 
-## Build Setup
-
 >3.遮罩层处于弹出框的上方
 
 > 遮罩层存放在table表中，列标签属性flexd会调用z-index与遮罩层产生冲突
@@ -36,6 +36,12 @@
   <dialog></dialog>
 </el-table-column>
 ```
+
+>4.url中文&符号乱码
+
+>编码用encodeURIComponent，解码用decodeURIComponent
+
+## Build Setup
 
 ``` bash
 # install dependencies

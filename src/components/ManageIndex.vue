@@ -22,7 +22,7 @@
           <el-col :xs="24" :sm="4" :md="3" :lg="2">
             <el-row><el-col align="right">
               <!-- 添加角色 -->
-              <role-add @loading="refresh"></role-add>
+              <role-add @loading="load"></role-add>
             </el-col></el-row>
           </el-col>
         </el-row>
@@ -52,7 +52,7 @@
           <el-table-column label="操作" align="center" width="140"><!--  fixed="right" -->
             <template scope="scope">
               <!-- 修改角色 -->
-              <role-modify :id="tableRole[scope.$index].id" @loading="refresh"></role-modify>
+              <role-modify :id="tableRole[scope.$index].id" @loading="load"></role-modify>
               <el-button @click.native.prevent="roleDel(scope.$index, tableRole)" size="small">
                 删除
               </el-button>
@@ -125,19 +125,13 @@ export default {
   methods: {
     // 菜单管理（角色管理页）
     roleMenu (index, rows) {
-      console.log(this.$router)
-      console.log(rows[index])
-      this.$router.push({name: 'RoleMenu', query: {id: rows[index].id}})
+      this.$router.push({name: 'RoleMenu', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
     },
     // 成员管理
     roleMember (index, rows) {
       console.log(this.$router)
       console.log(rows[index])
       this.$router.push({name: 'RoleMember', query: {id: rows[index].id}})
-    },
-    // 修改
-    alertRow () {
-      console.log('这里是父alertRow：')
     },
     // 删除
     roleDel (index, rows) {
@@ -188,9 +182,6 @@ export default {
         // error callback
         this.$message.error('服务器异常！')
       })
-    },
-    refresh () {
-      this.load()
     }
   },
   computed: {
