@@ -13,6 +13,7 @@
 ## 已解决的问题
 
 >1.动态修改table样式
+
 >  由于style标签上添加了scope属性，动态生成的class后的标签并没有scope属性，所以无法渲染css
 ```
 .content .el-row[data-v-5ef3af1c]{
@@ -22,6 +23,7 @@
 ```
 
 >2.添加角色清除input框数据
+
 > 写入请求，在确认按钮事件触发时模拟form表单提交，server端返回成功后将v-model绑定的数据清空
 ## Build Setup
 
