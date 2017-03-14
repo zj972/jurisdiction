@@ -60,7 +60,7 @@
                   <el-button type="primary" @click="RoleModify">确认修改</el-button>
                 </span>
               </el-dialog>
-              <el-button @click.native.prevent="delRow(scope.$index, tableRole)" size="small">
+              <el-button @click.native.prevent="roleDel(scope.$index, tableRole)" size="small">
                 删除
               </el-button>
             </template>
@@ -153,8 +153,32 @@ export default {
       this.dialogVisibleModify = true
     },
     // 删除
-    delRow (index, rows) {
-
+    roleDel (index, rows) {
+      this.$confirm('此操作将删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.get('http://localhost:3000/roleDel?id=' + rows[index].id).then((response) => {
+          if (response.data.msg) {
+            rows.splice(index, 1)
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          } else {
+            this.$message.error('服务器异常！')
+          }
+        }, (response) => {
+          // error callback
+          this.$message.error('服务器异常！')
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 菜单管理（成员管理页）
     menuMember (index, rows) {

@@ -134,23 +134,44 @@ export default {
         }
       }, (response) => {
         // error callback
+        this.$message.error('服务器异常！')
       })
     },
     roleAddSubmit () {
+      if (this.role === '') {
+        this.$message.error('角色不能为空！')
+        return
+      }
+      if (this.tableData.length === 0) {
+        this.$message.error('菜单不能为空！')
+        return
+      }
       this.$http.post('http://localhost:3000/roleAddSubmit', {
         'role': this.role,
         'menuData': this.tableData,
         'remark': this.remark
       }).then((response) => {
-        this.role = ''
-        this.remark = ''
-        this.tableData = ''
+        if (response.data.msg) {
+          this.role = ''
+          this.remark = ''
+          this.tableData = []
+          this.$message({
+            message: '提交成功！',
+            type: 'success'
+          })
+        } else {
+          this.$message.error('服务器异常！')
+        }
       }, (response) => {
         // error callback
+        this.$message.error('服务器异常！')
       })
       this.dialogVisibleAdd = false
     },
     cancelRoles () {
+      this.role = ''
+      this.remark = ''
+      this.tableData = []
       this.dialogVisibleAdd = false
     }
   }
@@ -175,5 +196,8 @@ export default {
 }
 .el-row>.el-col:nth-child(2){
   border-left: 1px solid #dfe6ec;
+}
+.RoleAdd>.el-button{
+  width: 100%
 }
 </style>
