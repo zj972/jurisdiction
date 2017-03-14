@@ -179,6 +179,8 @@ export default {
             message: '提交成功！',
             type: 'success'
           })
+          // 更新表格
+          this.$emit('loading')
         } else {
           this.$message.error('服务器异常！')
         }

@@ -22,7 +22,7 @@
           <el-col :xs="24" :sm="4" :md="3" :lg="2">
             <el-row><el-col align="right">
               <!-- 添加角色 -->
-              <role-add></role-add>
+              <role-add @loading="refresh"></role-add>
             </el-col></el-row>
           </el-col>
         </el-row>
@@ -52,7 +52,7 @@
           <el-table-column label="操作" align="center" width="140"><!--  fixed="right" -->
             <template scope="scope">
               <!-- 修改角色 -->
-              <role-modify :id="tableRole[scope.$index].id"></role-modify>
+              <role-modify :id="tableRole[scope.$index].id" @loading="refresh"></role-modify>
               <el-button @click.native.prevent="roleDel(scope.$index, tableRole)" size="small">
                 删除
               </el-button>
@@ -146,8 +146,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('http://localhost:3000/roleDel?id=' + rows[index].id).then((response) => {
-          if (response.data.msg) {
+        this.$http.get('http://localhost:3000/roleDel?id=' + rows[index].id).then((res) => {
+          if (res.data.msg) {
             rows.splice(index, 1)
             this.$message({
               type: 'success',
@@ -156,7 +156,7 @@ export default {
           } else {
             this.$message.error('服务器异常！')
           }
-        }, (response) => {
+        }, (res) => {
           // error callback
           this.$message.error('服务器异常！')
         })
@@ -181,13 +181,16 @@ export default {
     },
     // 加载数据
     load () {
-      this.$http.get('http://localhost:3000/manageIndex').then((response) => {
-        this.tableRoleData = response.data.role.slice()
-        this.tableMemberData = response.data.member.slice()
-      }, (response) => {
+      this.$http.get('http://localhost:3000/manageIndex').then((res) => {
+        this.tableRoleData = res.data.role.slice()
+        this.tableMemberData = res.data.member.slice()
+      }, (res) => {
         // error callback
         this.$message.error('服务器异常！')
       })
+    },
+    refresh () {
+      this.load()
     }
   },
   computed: {

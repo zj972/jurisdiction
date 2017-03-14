@@ -30,7 +30,7 @@
 
 >3.遮罩层处于弹出框的上方
 
-> 遮罩层存放在table表中，列标签属性flex会调用z-index与遮罩层产生冲突
+> 遮罩层存放在table表中，列标签属性flexd会调用z-index与遮罩层产生冲突
 ```
 <el-table-column fixed="right">
   <dialog></dialog>
