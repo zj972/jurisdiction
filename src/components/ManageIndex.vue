@@ -21,6 +21,7 @@
           </el-col>
           <el-col :xs="24" :sm="4" :md="3" :lg="2">
             <el-row><el-col align="right">
+              <!-- 添加角色 -->
               <role-add></role-add>
             </el-col></el-row>
           </el-col>
@@ -50,6 +51,7 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="140"><!--  fixed="right" -->
             <template scope="scope">
+              <!-- 修改角色 -->
               <role-modify :id="tableRole[scope.$index].id"></role-modify>
               <el-button @click.native.prevent="roleDel(scope.$index, tableRole)" size="small">
                 删除
@@ -176,30 +178,19 @@ export default {
       console.log(this.$router)
       console.log(rows[index])
       this.$router.push({name: 'MemberOperation'})
+    },
+    // 加载数据
+    load () {
+      this.$http.get('http://localhost:3000/manageIndex').then((response) => {
+        this.tableRoleData = response.data.role.slice()
+        this.tableMemberData = response.data.member.slice()
+      }, (response) => {
+        // error callback
+        this.$message.error('服务器异常！')
+      })
     }
   },
   computed: {
-    // 动态渲染表格
-    tableMember () {
-      if (this.inputSearch === '') {
-        return this.tableMemberData
-      }
-      let search = this.inputSearch
-      let data = this.tableMemberData.slice()
-      for (let i = 0; i < data.length;) {
-        let judge = false
-        for (let value in data[i]) {
-          // 正则匹配
-          judge = judge || (new RegExp(search).test(data[i][value]))
-        }
-        if (!judge) {
-          data.splice(i, 1)
-        } else {
-          i++
-        }
-      }
-      return data
-    },
     // 动态渲染表格
     tableRole () {
       if (this.inputRole === '' && this.inputMember === '') {
@@ -247,16 +238,32 @@ export default {
         }
       }
       return roleData
+    },
+    // 动态渲染表格
+    tableMember () {
+      if (this.inputSearch === '') {
+        return this.tableMemberData
+      }
+      let search = this.inputSearch
+      let data = this.tableMemberData.slice()
+      for (let i = 0; i < data.length;) {
+        let judge = false
+        for (let value in data[i]) {
+          // 正则匹配
+          judge = judge || (new RegExp(search).test(data[i][value]))
+        }
+        if (!judge) {
+          data.splice(i, 1)
+        } else {
+          i++
+        }
+      }
+      return data
     }
   },
   // 初始化
   mounted () {
-    this.$http.get('http://localhost:3000/manageIndex').then((response) => {
-      this.tableRoleData = response.data.role.slice()
-      this.tableMemberData = response.data.member.slice()
-    }, (response) => {
-      // error callback
-    })
+    this.load()
   }
 }
 </script>

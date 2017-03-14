@@ -6,9 +6,9 @@
 
 >1.在子路里切换父路由会叠加url
 
->2.遮罩层处于弹出框的上方
+>2.server端（express）获取post数据，并打印
 
->3.server端（express）获取post数据，并打印
+>3.tabs首次切换时，table宽度跳动
 
 ## 已解决的问题
 
@@ -27,6 +27,15 @@
 > 写入请求，在确认按钮事件触发时模拟form表单提交，server端返回成功后将v-model绑定的数据清空
 
 ## Build Setup
+
+>3.遮罩层处于弹出框的上方
+
+> 遮罩层存放在table表中，列标签属性flex会调用z-index与遮罩层产生冲突
+```
+<el-table-column fixed="right">
+  <dialog></dialog>
+</el-table-column>
+```
 
 ``` bash
 # install dependencies
