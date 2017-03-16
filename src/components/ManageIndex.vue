@@ -76,7 +76,7 @@
           </el-table-column>
           <el-table-column label="用户姓名" align="center">
             <template scope="scope">
-            {{tableMember[scope.$index].name}}（{{tableMember[scope.$index].englishName}}）
+            {{tableMember[scope.$index].chineseName}}（{{tableMember[scope.$index].englishName}}）
             </template>
           </el-table-column>
           <el-table-column prop="role" label="用户角色" align="center">
@@ -87,7 +87,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" align="center" width="200">
             <template scope="scope">
-              <el-button @click.native.prevent="menuMember(scope, tableMember)" size="small">
+              <el-button @click.native.prevent="menuMember(scope.$index, tableMember)" size="small">
                 菜单管理
               </el-button>
               <el-button @click.native.prevent="memberOperation(scope.$index, tableMember)" size="small">
@@ -129,9 +129,7 @@ export default {
     },
     // 成员管理
     roleMember (index, rows) {
-      console.log(this.$router)
-      console.log(rows[index])
-      this.$router.push({name: 'RoleMember', query: {id: rows[index].id}})
+      this.$router.push({name: 'RoleMember', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
     },
     // 删除
     roleDel (index, rows) {
@@ -163,15 +161,14 @@ export default {
     },
     // 菜单管理（成员管理页）
     menuMember (index, rows) {
-      console.log(this.$router)
       console.log(rows[index])
-      this.$router.push({name: 'MemberMenu'})
+      this.$router.push({name: 'MemberMenu', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
     },
     // 操作权限
     memberOperation (index, rows) {
       console.log(this.$router)
       console.log(rows[index])
-      this.$router.push({name: 'MemberOperation'})
+      this.$router.push({name: 'MemberOperation', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
     },
     // 加载数据
     load () {

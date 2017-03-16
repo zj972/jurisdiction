@@ -66,13 +66,13 @@ export default {
       role: '',
       firstMenu: '',
       secondMenu: '',
+      firstOptions: [],
+      secondOptions: [],
+      options: [],
       checkAll: false,
       isIndeterminate: false,
       checkOptions: [],
       checkList: [],
-      firstOptions: [],
-      secondOptions: [],
-      options: [],
       roleMenuTableData: []
     }
   },
@@ -151,65 +151,75 @@ export default {
       this.isIndeterminate = (checkedCount > 0 && checkedCount < this.checkOptions.length)
       console.log(this.checkList)
     },
+    // 批量添加
     roleMenuAdd () {
-      this.$confirm('此操作将批量添加所选菜单, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post('http://localhost:3000/roleMenuAdd', {
-          'id': this.checkList
-        }).then((res) => {
-          if (res.data.msg) {
-            this.$message({
-              message: '批量添加成功！',
-              type: 'success'
-            })
-            // 更新表格
-            this.load()
-          } else {
+      if (this.checkAll || this.isIndeterminate) {
+        this.$confirm('此操作将批量添加所选菜单, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post('http://localhost:3000/roleMenuAdd', {
+            'id': this.checkList
+          }).then((res) => {
+            if (res.data.msg) {
+              this.$message({
+                message: '批量添加成功！',
+                type: 'success'
+              })
+              // 更新表格
+              this.load()
+            } else {
+              this.$message.error('服务器异常！')
+            }
+          }, (res) => {
+            // error callback
             this.$message.error('服务器异常！')
-          }
-        }, (res) => {
-          // error callback
-          this.$message.error('服务器异常！')
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消批量添加'
+          })
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消批量添加'
-        })
-      })
+      } else {
+        this.$message.error('请选择所要添加的菜单！')
+      }
     },
+    // 批量删除
     roleMenuDel () {
-      this.$confirm('此操作将批量添加所选菜单, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.post('http://localhost:3000/roleMenuDel', {
-          'id': this.checkList
-        }).then((res) => {
-          if (res.data.msg) {
-            this.$message({
-              message: '批量添加成功！',
-              type: 'success'
-            })
-            // 更新表格
-            this.load()
-          } else {
+      if (this.checkAll || this.isIndeterminate) {
+        this.$confirm('此操作将批量添加所选菜单, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post('http://localhost:3000/roleMenuDel', {
+            'id': this.checkList
+          }).then((res) => {
+            if (res.data.msg) {
+              this.$message({
+                message: '批量添加成功！',
+                type: 'success'
+              })
+              // 更新表格
+              this.load()
+            } else {
+              this.$message.error('服务器异常！')
+            }
+          }, (res) => {
+            // error callback
             this.$message.error('服务器异常！')
-          }
-        }, (res) => {
-          // error callback
-          this.$message.error('服务器异常！')
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消批量添加'
+          })
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消批量添加'
-        })
-      })
+      } else {
+        this.$message.error('请选择所要移除的菜单！')
+      }
     }
   },
   computed: {
