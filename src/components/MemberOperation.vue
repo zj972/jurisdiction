@@ -10,7 +10,7 @@
         <el-col>
           <span>操作权限赋予：</span>
           <!-- 选择器 -->
-          <selector></selector>
+          <!-- <selector></selector> -->
         </el-col>
       </el-row>
       <!-- 添加列表 -->
@@ -98,13 +98,13 @@
 </template>
 
 <script>
-import Selector from './Selector'
+// import Selector from './Selector'
 
 export default {
   name: 'MemberOperation',
-  components: {
-    Selector
-  },
+  // components: {
+  //   Selector
+  // },
   data () {
     return {
       role: '',
