@@ -14,7 +14,8 @@
 
 >1.动态修改table样式
 
->  由于style标签上添加了scope属性，动态生成的class后的标签并没有scope属性，所以无法渲染css
+由于style标签上添加了scope属性，动态生成的class后的标签并没有scope属性，所以无法渲染css
+
 ```
 .content .el-row[data-v-5ef3af1c]{
   margin: 15px 0;
@@ -24,11 +25,12 @@
 
 >2.添加角色清除input框数据
 
-> 写入请求，在确认按钮事件触发时模拟form表单提交，server端返回成功后将v-model绑定的数据清空
+写入请求，在确认按钮事件触发时模拟form表单提交，server端返回成功后将v-model绑定的数据清空
 
 >3.遮罩层处于弹出框的上方
 
-> 遮罩层存放在table表中，列标签属性flexd会调用z-index与遮罩层产生冲突
+遮罩层存放在table表中，列标签属性flexd会调用z-index与遮罩层产生冲突
+
 ```
 <el-table-column fixed="right">
   <dialog></dialog>
@@ -37,13 +39,14 @@
 
 >4.url中文&符号乱码
 
->编码用encodeURIComponent，解码用decodeURIComponent
+编码用encodeURIComponent，解码用decodeURIComponent
 
 >5.在子路里切换父路由会叠加url
 
->在路由设置里面，子路由前面要加'/'
+在路由设置里面，子路由前面要加'/'
 
->### 但并没有找到解释以及为什么加'/'
+### 但并没有找到解释以及为什么加'/'
+
 ```
 path: '/Manage',
   component: Manage,
