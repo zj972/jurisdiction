@@ -26,7 +26,7 @@
             </el-col></el-row>
           </el-col>
         </el-row>
-        <el-table :data="tableRole" border style="width: 100%">
+        <el-table :data="tableRole" border class="tableWidth">
           <el-table-column prop="id" label="角色ID" align="center" width="80">
           </el-table-column>
           <el-table-column prop="role" label="角色" align="center" width="150">
@@ -71,7 +71,7 @@
             </el-input>
           </el-col>
         </el-row>
-        <el-table :data="tableMember" border style="width: 100%">
+        <el-table :data="tableMember" border class="tableWidth">
           <el-table-column prop="id" label="用户ID" align="center" width="80">
           </el-table-column>
           <el-table-column label="用户姓名" align="center">
@@ -268,6 +268,9 @@ export default {
 .button-row>.el-col>.el-row{
   margin: 0;
 }
-.RoleAdd{
+</style>
+<style>
+.el-table .cell{
+  white-space: nowrap;
 }
 </style>
