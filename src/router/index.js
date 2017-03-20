@@ -40,19 +40,19 @@ const router = new Router({
           path: '',
           component: ManageIndex
         }, {
-          path: 'RoleMenu',
+          path: '/RoleMenu',
           name: 'RoleMenu',
           component: RoleMenu
         }, {
-          path: 'RoleMember',
+          path: '/RoleMember',
           name: 'RoleMember',
           component: RoleMember
         }, {
-          path: 'MemberMenu',
+          path: '/MemberMenu',
           name: 'MemberMenu',
           component: MemberMenu
         }, {
-          path: 'MemberOperation',
+          path: '/MemberOperation',
           name: 'MemberOperation',
           component: MemberOperation
         }

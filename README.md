@@ -4,13 +4,11 @@
 
 ## 待解决的问题
 
->1.在子路里切换父路由会叠加url
+>1.server端（express）获取post数据，并打印
 
->2.server端（express）获取post数据，并打印
+>2.tabs首次切换时，table宽度跳动
 
->3.tabs首次切换时，table宽度跳动
-
->4.弹出框复用
+>3.弹出框复用
 
 ## 已解决的问题
 
@@ -40,6 +38,24 @@
 >4.url中文&符号乱码
 
 >编码用encodeURIComponent，解码用decodeURIComponent
+
+>5.在子路里切换父路由会叠加url
+
+>在路由设置里面，子路由前面要加'/'
+
+>### 但并没有找到解释以及为什么加'/'
+```
+path: '/Manage',
+  component: Manage,
+    children: [
+      {
+        path: '/RoleMenu',
+        name: 'RoleMenu',
+        component: RoleMenu
+      }
+    ]
+  }
+```
 
 ## Build Setup
 
