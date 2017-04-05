@@ -74,6 +74,20 @@ path: '/Manage',
 
 调整全选数组初始化位置，将其作为计算属性的一部分进行动态调整
 
+>9.侧栏样式动态锁定，tabs标签样式动态锁定
+
+给default-active设置v-model值，然后在每次切换时动态获取url的参数或者path，同时修改active值
+
+```
+// 侧栏
+getActive () {
+  this.active = window.location.pathname.substr(1).split('/')[0]
+}
+// tabs
+load () {
+  this.activeName = this.getUrl('active') || 'role'
+}
+```
 ## Build Setup
 
 ``` bash
