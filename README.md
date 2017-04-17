@@ -88,6 +88,25 @@ load () {
   this.activeName = this.getUrl('active') || 'role'
 }
 ```
+
+>10.判断当前表格值是否存在于数组中（优化）
+
+使用ES6中新添加的MAP数据结构，优化时间复杂度
+
+···
+let checked = new Map()
+for (let item of val) {
+  checked.set(item.menu)
+}
+for (let item of this.options) {
+  if (checked.has(item.value)) {
+    for (let i = 0; i < item.children.length; i++) {
+      this.secondOptions[0].data.push(item.value + '-' + item.children[i])
+    }
+  }
+}
+···
+
 ## Build Setup
 
 ``` bash
