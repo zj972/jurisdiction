@@ -1,0 +1,172 @@
+{
+  "role": [
+    {
+      "id": 1,
+      "role": "产品/运营人员",
+      "checked": "订单查询、欺诈订单、产品配置、收入汇总、统计信息、版本统计信息、应用警报设置、权限申请",
+      "remark": ""
+    },
+    {
+      "id": 2,
+      "role": "技术人员",
+      "checked": "订单查询、产品配置",
+      "remark": "Web前端"
+    },
+    {
+      "id": 3,
+      "role": "财务人员",
+      "checked": "订单查询、渠道对账收入、FBC对账收入、对账单",
+      "remark": ""
+    },
+    {
+      "id": 4,
+      "role": "商务人员",
+      "checked": "订单查询、收入汇总、统计信息、渠道对账收入、FBC对账收入、对账单",
+      "remark": ""
+    },
+    {
+      "id": 5,
+      "role": "客服/测试人员",
+      "checked": "订单查询",
+      "remark": ""
+    },
+    {
+      "id": 6,
+      "role": "普通管理员",
+      "checked": "【支付服务中心】",
+      "remark": ""
+    },
+    {
+      "id": 7,
+      "role": "超级管理员",
+      "checked": "【支付服务中心】、【支付系统管理】",
+      "remark": ""
+    }
+  ],
+  "member": [
+    {
+      "id": 1,
+      "chineseName": "杨少波",
+      "englishName": "SarboYang",
+      "role": "超级管理员",
+      "department": "数据支付部/支付组/Web前端组",
+      "lastLoginTime": "2017-03-17 22:25:22"
+    },
+    {
+      "id": 2,
+      "chineseName": "张磊",
+      "englishName": "zhanglei",
+      "role": "管理员",
+      "department": "数据支付部/支付组/Web前端组",
+      "lastLoginTime": "2017-03-17 22:23:22"
+    },
+    {
+      "id": 3,
+      "chineseName": "杨少波",
+      "englishName": "SarboYang",
+      "role": "产品/运营人员",
+      "department": "数据支付部/支付组/Web前端组",
+      "lastLoginTime": "2017-03-17 22:12:22"
+    },
+    {
+      "id": 4,
+      "chineseName": "杨少波",
+      "englishName": "SarboYang",
+      "role": "商务人员",
+      "department": "数据支付部/支付组/Web前端组",
+      "lastLoginTime": "2017-03-17 26:22:22"
+    },
+    {
+      "id": 5,
+      "chineseName": "杨波",
+      "englishName": "SarboYang",
+      "role": "客服人员",
+      "department": "数据支付部/支付组/Web前端组",
+      "lastLoginTime": "2017-03-97 22:22:82"
+    }
+  ],
+  "menu": [
+    {
+      "value": "黄金糕",
+      "children": [
+        "双皮奶",
+        "双皮皮奶",
+        "双皮",
+        "皮奶"
+      ]
+    },
+    {
+      "value": "双皮奶",
+      "children": [
+        "双皮1奶",
+        "双皮2奶",
+        "双皮3奶",
+        "双皮4奶"
+      ]
+    },
+    {
+      "value": "蚵仔煎",
+      "children": [
+        "双3皮奶",
+        "双45皮奶",
+        "双12皮奶",
+        "双23皮奶"
+      ]
+    },
+    {
+      "value": "龙须面",
+      "children": [
+        "双3皮奶",
+        "双45皮奶",
+        "选项23",
+        "选项24"
+      ]
+    },
+    {
+      "value": "北京烤鸭",
+      "children": [
+        "双3皮奶",
+        "双45皮奶",
+        "双12皮奶",
+        "双23皮奶"
+      ]
+    }
+  ],
+  "menuData": [
+    {
+      "id": "1",
+      "project": "支付服务中心",
+      "firstMenu": "龙须面",
+      "secondMenu": "双45皮奶",
+      "operation": true
+    },
+    {
+      "id": "2",
+      "project": "支付服务中心",
+      "firstMenu": "北京烤鸭",
+      "secondMenu": "双45皮奶",
+      "operation": false
+    },
+    {
+      "id": "3",
+      "project": "支付服务中心",
+      "firstMenu": "北京烤鸭",
+      "secondMenu": "双23皮奶",
+      "operation": true
+    },
+    {
+      "id": "4",
+      "project": "支付服务中心",
+      "firstMenu": "产品配置",
+      "secondMenu": "产品配置-产品审核",
+      "operation": true
+    },
+    {
+      "id": "5",
+      "project": "支付服务中心",
+      "firstMenu": "产品配置",
+      "secondMenu": "产品配置-我的申请",
+      "operation": true
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "viewAuth": [
+    {
+      "uuid": "1314521",
+      "applicant": "DJLXS",
+      "role": "前端",
+      "department": "数据支付部",
+      "auth":["订单查询", "欺诈订单", "统计信息", "收入汇总"],
+      "applyTime": "2017-03-14",
+      "reason": "想做的更好"
+    },
+    {
+      "uuid": "1314",
+      "applicant": "DJL",
+      "role": "前端",
+      "department": "数据支付部",
+      "auth":["订单查询", "统计信息", "收入汇总"],
+      "applyTime": "2017-03-14",
+      "reason": "想做的更好"
+    }
+  ],
+  "operateAuth": [
+    {
+      "uuid":"12",
+      "game": "地方棋牌",
+      "platform": "四川",
+      "hall": "全部",
+      "terminal": "全部",
+      "apk": "全部",
+      "APPID": "全部",
+      "auth": ["订单操作"],
+      "applicant": "DJLXS",
+      "role": "管理员",
+      "department": "数据支付部",
+      "applyTime": "2017-03-14",
+      "reason": "我想申请这些操作权限1"
+    },
+    {
+      "uuid":"1245",
+      "game": "地方棋牌",
+      "platform": "四川",
+      "hall": "全部",
+      "terminal": "全部",
+      "apk": "全部",
+      "APPID": "全部",
+      "auth": ["订单操作"],
+      "applicant": "DJL.D",
+      "role": "管理员",
+      "department": "数据支付部",
+      "applyTime": "2017-03-14",
+      "reason": "就是想要，服不服"
+    },
+    {
+      "uuid":"122",
+      "game": "地方棋牌",
+      "platform": "四川",
+      "hall": "全部",
+      "terminal": "全部",
+      "apk": "全部",
+      "APPID": "全部",
+      "auth": ["订单操作"],
+      "applicant": "DJL.L",
+      "role": "管理员",
+      "department": "数据支付部",
+      "applyTime": "2017-03-14",
+      "reason": "我想申请这些操作权限3"
+    }
+  ]
+}

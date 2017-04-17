@@ -11,20 +11,15 @@
       </el-row>
       <el-row>
         <el-col :span="6">菜单选择</el-col>
-        <el-col :span="18">
-          <el-row type="flex" justify="space-between">
-            <el-cascader
-              :options="options"
-              v-model="optionsData"
-              @change="handleChange">
-            </el-cascader>
-          </el-row>
+        <el-col :span="18" align="left">
+          <checkbox-cascader title="一级菜单" :data="firstOptions" v-on:checked="checkedOne"></checkbox-cascader>
+          <checkbox-cascader title="二级菜单" :data="secondOptions" v-on:checked="checkedTwo" :disabled="openSecond"></checkbox-cascader>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6">已选菜单</el-col>
         <el-col :span="18">
-          <el-table :data="menuData">
+          <el-table :data="menuData" max-height="300">
             <el-table-column
               prop="firstMenu"
               label="一级菜单"
@@ -68,7 +63,12 @@
 </template>
 
 <script>
+import CheckboxCascader from './CheckboxCascader'
+
 export default {
+  components: {
+    CheckboxCascader
+  },
   name: 'RoleAdd',
   data () {
     return {
@@ -76,62 +76,65 @@ export default {
       firstMenu: '',
       secondMenu: '',
       remark: '',
-      dialogVisibleAdd: false,
-      optionsData: [],
+      // 菜单列表
       options: [],
+      // 一级菜单
+      firstOptions: [],
+      // 二级菜单
+      secondOptions: [],
+      openSecond: true,
+      dialogVisibleAdd: false,
       menuData: []
     }
   },
   methods: {
     // 添加菜单
-    handleChange (value) {
-      let one = value[0]
-      let two = value[1]
-      let obj = {
-        firstMenu: one,
-        secondMenu: two
+    checkedOne (val) {
+      this.secondOptions = [{label: '二级菜单', prop: 'menu', data: []}]
+      let checked = new Map()
+      for (let item of val) {
+        checked.set(item.menu)
       }
-      this.menuData.push(obj)
-      for (let data of this.options) {
-        if (data.value === one) {
-          for (let i = 0; i < data.children.length; i++) {
-            if (data.children[i].value === two) {
-              data.children[i].disabled = true
-            }
+      for (let item of this.options) {
+        if (checked.has(item.value)) {
+          for (let i = 0; i < item.children.length; i++) {
+            this.secondOptions[0].data.push(item.value + '-' + item.children[i])
           }
         }
       }
-      this.optionsData = []
+      this.openSecond = false
+    },
+    checkedTwo (val) {
+      let list = [...val]
+      for (let item of val) {
+        item.menu = item.menu.split('-')
+        item.firstMenu = item.menu[0]
+        item.secondMenu = item.menu[1]
+        delete item.menu
+      }
+      for (let i = 0; i < list.length; i++) {
+        let key = true
+        for (let j = 0, length = this.menuData.length; j < length; j++) {
+          if (list[i].firstMenu === this.menuData[j].firstMenu && list[i].secondMenu === this.menuData[j].secondMenu) {
+            key = false
+          }
+        }
+        if (key) {
+          this.menuData.push(list[i])
+        }
+      }
     },
     // 删除菜单
     delRow (index, rows) {
-      let array = rows[index]
-      for (let data of this.options) {
-        if (data.value === array.firstMenu) {
-          for (let i = 0; i < data.children.length; i++) {
-            if (data.children[i].value === array.secondMenu) {
-              data.children[i].disabled = ''
-            }
-          }
-        }
-      }
       rows.splice(index, 1)
     },
     // 添加角色
     roleAdd () {
-      this.$http.get('http://localhost:3000/roleAdd').then((res) => {
-        this.options = res.data.menu.slice()
-        for (let data of this.options) {
-          data.label = data.value
-          if (data.children) {
-            for (let i = 0; i < data.children.length; i++) {
-              let value = data.children[i]
-              data.children[i] = {
-                'value': value,
-                'label': value
-              }
-            }
-          }
+      this.$http.get('manage/role-add').then((res) => {
+        this.options = [...res.body.data.menu]
+        this.firstOptions = [{label: '一级菜单', prop: 'menu', data: []}]
+        for (let item of this.options) {
+          this.firstOptions[0].data.push(item.value)
         }
         this.dialogVisibleAdd = true
       }, (res) => {
@@ -149,21 +152,26 @@ export default {
         this.$message.error('菜单不能为空！')
         return
       }
-      this.$http.post('http://localhost:3000/roleAddSubmit', {
+      this.$http.post('manage/role-add-submit', {
         'role': this.role,
         'menuData': this.menuData,
         'remark': this.remark
       }).then((res) => {
-        if (res.data.msg) {
+        if (res.body.data) {
           this.role = ''
           this.remark = ''
           this.menuData = []
+          this.options = []
+          this.firstOptions = []
+          this.secondOptions = []
+          this.openSecond = true
           this.$message({
             message: '提交成功！',
             type: 'success'
           })
           // 更新表格
           this.$emit('loading')
+          this.dialogVisibleAdd = false
         } else {
           this.$message.error('服务器异常！')
         }
@@ -171,13 +179,16 @@ export default {
         // error callback
         this.$message.error('服务器异常！')
       })
-      this.dialogVisibleAdd = false
     },
     // 取消
     roleAddCancel () {
       this.role = ''
       this.remark = ''
       this.menuData = []
+      this.options = []
+      this.firstOptions = []
+      this.secondOptions = []
+      this.openSecond = true
       this.dialogVisibleAdd = false
       this.$message('已取消添加！')
     }
@@ -205,6 +216,6 @@ export default {
   border-left: 1px solid #dfe6ec;
 }
 .RoleAdd>.el-button{
-  width: 100%
+  width: 100%;
 }
 </style>

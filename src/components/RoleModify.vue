@@ -1,9 +1,6 @@
 <!-- 权限管理 -> 角色管理 -> 修改角色 -> 子组件 -->
 <template>
   <div class="RoleModify">
-    <el-button @click="open()" size="small">
-      修改
-    </el-button>
     <el-dialog title="修改角色" v-model="dialogVisibleModify" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <el-row>
         <el-col :span="6">角色</el-col>
@@ -14,19 +11,14 @@
       <el-row>
         <el-col :span="6">菜单选择</el-col>
         <el-col :span="18">
-          <el-row type="flex" justify="space-between">
-            <el-cascader
-              :options="options"
-              v-model="optionsData"
-              @change="handleChange">
-            </el-cascader>
-          </el-row>
+          <checkbox-cascader title="一级菜单" :data="firstOptions" v-on:checked="checkedOne"></checkbox-cascader>
+          <checkbox-cascader title="二级菜单" :data="secondOptions" v-on:checked="checkedTwo" :disabled="openSecond"></checkbox-cascader>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="6">已选菜单</el-col>
         <el-col :span="18">
-          <el-table :data="menuData">
+          <el-table :data="menuData" max-height="300">
             <el-table-column
               prop="firstMenu"
               label="一级菜单"
@@ -70,86 +62,83 @@
 </template>
 
 <script>
+import CheckboxCascader from './CheckboxCascader'
+
 export default {
+  components: {
+    CheckboxCascader
+  },
   name: 'RoleModify',
   data () {
     return {
+      id: null,
       role: '',
       firstMenu: '',
       secondMenu: '',
       remark: '',
       dialogVisibleModify: false,
-      optionsData: [],
+      // 菜单列表
       options: [],
+      // 一级菜单
+      firstOptions: [],
+      // 二级菜单
+      secondOptions: [],
+      openSecond: true,
       menuData: []
     }
   },
-  props: ['id'],
   methods: {
     // 添加菜单
-    handleChange (value) {
-      let one = value[0]
-      let two = value[1]
-      let obj = {
-        firstMenu: one,
-        secondMenu: two
+    checkedOne (val) {
+      this.secondOptions = [{label: '二级菜单', prop: 'menu', data: []}]
+      let checked = new Map()
+      for (let item of val) {
+        checked.set(item.menu)
       }
-      this.menuData.push(obj)
-      for (let data of this.options) {
-        if (data.value === one) {
-          for (let i = 0; i < data.children.length; i++) {
-            if (data.children[i].value === two) {
-              data.children[i].disabled = true
-            }
+      for (let item of this.options) {
+        if (checked.has(item.value)) {
+          for (let i = 0; i < item.children.length; i++) {
+            this.secondOptions[0].data.push(item.value + '-' + item.children[i])
           }
         }
       }
-      this.optionsData = []
+      this.openSecond = false
+    },
+    checkedTwo (val) {
+      let list = [...val]
+      for (let item of val) {
+        item.menu = item.menu.split('-')
+        item.firstMenu = item.menu[0]
+        item.secondMenu = item.menu[1]
+        delete item.menu
+      }
+      for (let i = 0; i < list.length; i++) {
+        let key = true
+        for (let j = 0, length = this.menuData.length; j < length; j++) {
+          if (list[i].firstMenu === this.menuData[j].firstMenu && list[i].secondMenu === this.menuData[j].secondMenu) {
+            key = false
+          }
+        }
+        if (key) {
+          this.menuData.push(list[i])
+        }
+      }
     },
     // 删除菜单
     delRow (index, rows) {
-      let array = rows[index]
-      for (let data of this.options) {
-        if (data.value === array.firstMenu) {
-          for (let i = 0; i < data.children.length; i++) {
-            if (data.children[i].value === array.secondMenu) {
-              data.children[i].disabled = ''
-            }
-          }
-        }
-      }
       rows.splice(index, 1)
     },
     // 修改角色
-    open () {
-      this.$http.get('http://localhost:3000/roleModify?id=' + this.id).then((res) => {
-        this.role = res.data.role
-        this.menuData = res.data.menuData
-        this.remark = res.data.remark
-        this.options = res.data.menu.slice()
-        for (let data of this.options) {
-          data.label = data.value
-          if (data.children) {
-            for (let i = 0; i < data.children.length; i++) {
-              let value = data.children[i]
-              data.children[i] = {
-                'value': value,
-                'label': value
-              }
-            }
-          }
-        }
-        console.log(this.menuData[0].secondMenu)
-        for (let i = 0; i < this.menuData.length; i++) {
-          for (let data of this.options) {
-            if (data.value === this.menuData[i].firstMenu) {
-              for (let j = 0; j < data.children.length; j++) {
-                if (data.children[j].value === this.menuData[i].secondMenu) {
-                  data.children[j].disabled = true
-                }
-              }
-            }
-          }
+    open (index) {
+      this.id = index
+      this.$http.get('manage/role-modify?id=' + this.id).then((res) => {
+        this.role = res.body.data.role
+        this.menuData = res.body.data.menuData
+        this.remark = res.body.data.remark
+        this.options = [...res.body.data.menu]
+        this.firstOptions = [{label: '一级菜单', prop: 'menu', data: []}]
+        for (let item of this.options) {
+          this.firstOptions[0].data.push(item.value)
         }
         this.dialogVisibleModify = true
       }, (res) => {
@@ -166,12 +155,13 @@ export default {
         this.$message.error('菜单不能为空！')
         return
       }
-      this.$http.post('http://localhost:3000/roleModifySubmit', {
+      this.$http.post('manage/role-modify-submit', {
+        'id': this.id,
         'role': this.role,
         'menuData': this.menuData,
         'remark': this.remark
       }).then((res) => {
-        if (res.data.msg) {
+        if (res.body.data) {
           this.role = ''
           this.remark = ''
           this.menuData = []
@@ -181,6 +171,7 @@ export default {
           })
           // 更新表格
           this.$emit('loading')
+          this.dialogVisibleModify = false
         } else {
           this.$message.error('服务器异常！')
         }
@@ -188,7 +179,6 @@ export default {
         // error callback
         this.$message.error('服务器异常！')
       })
-      this.dialogVisibleModify = false
     },
     roleModifyCancel () {
       this.role = ''

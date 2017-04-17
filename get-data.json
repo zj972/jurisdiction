@@ -1,0 +1,37 @@
+{
+  "data": [{
+    "game": {
+      "id": 0,
+      "name": "德州扑克"
+    },
+    "platform": {
+      "id": 0,
+      "name": "TV平台"
+    },
+    "hall": {
+      "id": 0,
+      "name": "三人厅"
+    },
+    "terminal": {
+      "id": 0,
+      "name": "IOS"
+    },
+    "apk": {
+      "id": 0,
+      "name": "新浪"
+    },
+    "handler": {
+      "id": 2489,
+      "name": "李晓龙",
+      "enname": "JohnLi"
+    },
+    "auth": [
+      {
+        "id": 123,
+        "name": "订单查询",
+        "owned": false
+      }
+    ],
+    "bpid":[123,456]
+  }]
+}

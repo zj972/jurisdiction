@@ -1,0 +1,29 @@
+.clearfix:before, .clearfix:after
+  content: ".";
+  display: block;
+  height: 0;
+  visibility: hidden;
+
+.clearfix:after
+  clear: both;
+
+.clearfix
+  zoom: 1;
+
+/* IE < 8 */
+
+.container
+  position: fixed
+  top: 40px
+  left: 200px
+  right: 0
+  bottom: 2px
+  z-index: 50
+  padding: 30px
+  border: 2px solid #e5e5e5
+  border-top: none
+  overflow :auto
+  background: #ffffff
+
+.v-align-m
+  vertical-align: middle

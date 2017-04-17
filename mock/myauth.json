@@ -1,0 +1,192 @@
+{
+  "ownedAuth": {
+    "viewAuth": [
+      {
+        "index": 1,
+        "name": "订单查询"
+      },
+      {
+        "index": 2,
+        "name": "欺诈订单"
+      },
+      {
+        "index": 3,
+        "name": "产品配置查询"
+      },
+      {
+        "index": 4,
+        "name": "收入汇总"
+      }
+    ],
+    "operateAuth": [
+      {
+        "game": "地方棋牌",
+        "platform": "四川",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth": ["订单驳回", "其他权限"],
+        "handler": "DJLXS"
+      },
+      {
+        "game": "德州扑克",
+        "platform": "全国",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth": ["订单驳回", "其他权限"],
+        "handler": "DJL箫氏"
+      },
+      {
+        "game": "博雅斗地主",
+        "platform": "大连",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth":  ["订单驳回", "其他权限"],
+        "handler": "DJLXS"
+      }
+    ]
+  },
+  "pendingAuth": {
+    "viewAuth": [
+      {
+        "uuid": 1,
+        "auth": ["订单查询","欺诈订单","收入汇总"],
+        "reason": "这个一条申请理由",
+        "status": 0,
+        "handler": "DJL.D"
+      },
+      {
+        "uuid": 2,
+        "auth": ["订单查询","欺诈订单","收入汇总"],
+        "reason": "这个一条申请理由",
+        "status": 0,
+        "handler": "DJL.J"
+      },
+      {
+        "uuid": 3,
+        "auth": ["订单查询","欺诈订单","收入汇总"],
+        "reason": "这个一条申请理由",
+        "status": 0,
+        "handler": "DJL.L"
+      }
+    ],
+    "operateAuth": [
+      {
+        "uuid":1,
+        "game": "地方棋牌",
+        "platform": "四川",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth": ["订单操作"],
+        "status": 1,
+        "handler": "DJLXS",
+        "reason": "我想申请这些操作权限1"
+      },
+      {
+        "uuid":2,
+        "game": "地方棋牌",
+        "platform": "四川",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth": ["订单操作"],
+        "status": 1,
+        "handler": "DJL.J",
+        "reason": "我想申请这些操作权限2"
+      },
+      {
+        "uuid":3,
+        "game": "地方棋牌",
+        "platform": "四川",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth": ["订单操作"],
+        "status": 1,
+        "handler": "DJL.L",
+        "reason": "我想申请这些操作权限3"
+      }
+    ]
+  },
+  "rejectAuth": {
+    "viewAuth": [
+      {
+        "uuid": 1,
+        "auth": ["订单查询","欺诈订单","收入汇总"],
+        "applyTime": "2017-03-09",
+        "reason": "申请理由不合理",
+        "status": 3,
+        "handler": "DJL.D"
+      },
+      {
+        "uuid": 2,
+        "auth": ["订单查询","欺诈订单","收入汇总"],
+        "applyTime": "2017-03-10",
+        "reason": "申请理由不合理",
+        "status": 3,
+        "handler": "DJL.J"
+      },
+      {
+        "uuid": 3,
+        "auth": ["订单查询","欺诈订单","收入汇总"],
+        "applyTime": "2017-03-11",
+        "reason": "申请理由不合理",
+        "status": 3,
+        "handler": "DJL.L"
+      }
+    ],
+    "operateAuth": [
+      {
+        "uuid":1,
+        "game": "地方棋牌",
+        "platform": "四川",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth": ["订单操作"],
+        "applyTime": "2017-03-09",
+        "status": 3,
+        "handler": "DJLXS",
+        "reason": "申请理由不合理"
+      },
+      {
+        "uuid":2,
+        "game": "地方棋牌",
+        "platform": "四川",
+        "hall": "全部",
+        "terminal": "全部",
+        "apk": "全部",
+        "APPID": "全部",
+        "auth": ["订单操作"],
+        "applyTime": "2017-03-10",
+        "status": 3,
+        "handler": "DJL.J",
+        "reason": "申请理由不合理"
+      },
+      {
+        "uuid":3,
+        "game": "地方棋牌",
+        "platform": "四川",
+        "hall": "全部",
+        "terminal": "全部",
+        "appPackage": "全部",
+        "APPID": "全部",
+        "auth": ["订单操作"],
+        "applyTime": "2017-03-11",
+        "status": 3,
+        "handler": "DJL.L",
+        "reason": "申请理由不合理"
+      }
+    ]
+  }
+}

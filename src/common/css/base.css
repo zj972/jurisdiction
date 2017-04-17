@@ -53,7 +53,8 @@ textarea { outline: none; }
 
 textarea { resize: none; }
 
-a { text-decoration: none; }
+a { text-decoration: none;
+  color: #000;}
 
 /*清除浮动*/
 .clearfix:after {

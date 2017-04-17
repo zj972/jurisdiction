@@ -2,44 +2,59 @@
 <template>
   <div class="MemberOperation">
     <el-row>
-      <el-button type="text"><router-link to="/Manage"><i class="el-icon-arrow-left"></i></router-link></el-button>
-      {{role}}
+      <el-button type="text"><router-link :to="{path: '/manage', query: {active: 'member'}}"><i class="el-icon-arrow-left"></i></router-link></el-button>
+      {{user}}
     </el-row>
     <el-row>
       <el-row class="border-bottom select-btn">
         <el-col>
           <span>操作权限赋予：</span>
           <!-- 选择器 -->
-          <!-- <selector></selector> -->
+          <select-auth v-on:addSelData="addSelData"></select-auth>
         </el-col>
       </el-row>
       <!-- 添加列表 -->
       <el-row>
         <el-table :data="tableAddData" border style="width: 100%" max-height="250">
-            <el-table-column
-              v-for="(header,index) in tableHeader"
-              :prop="header.prop"
-              :label="header.label"
-              :key="index"
-              align="center">
-
-            </el-table-column>
-            <el-table-column label="权限内容" align="center" width="220">
-              <template scope="scope">
-                <el-checkbox v-model="scope.row.content.refund">发货退款</el-checkbox>
-                <el-checkbox v-model="scope.row.content.alarm">报警设置</el-checkbox>
-              </template>
-            </el-table-column>
-            <el-table-column label="业务审核人" prop="verifier" align="center">
-            </el-table-column>
-            <el-table-column fixed="right" label="操作" align="center" width="100">
-              <template scope="scope">
-                <el-button @click.native.prevent="addRow(scope.$index, tableAddData)" size="small">
-                  添加
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <el-table-column prop="game.name" label="游戏" align="center" width="150"></el-table-column>
+          <el-table-column prop="platform.name" label="平台" align="center" width="150"></el-table-column>
+          <el-table-column prop="hall.name" label="大厅" align="center"  width="100"></el-table-column>
+          <el-table-column prop="terminal.name" label="终端" align="center"  width="150"></el-table-column>
+          <el-table-column prop="apk.name" label="应用包" align="center" ></el-table-column>
+          <el-table-column label="APPID应用" align="center"  width="150">
+            <template scope="scope">
+              <el-button size="small" @click="getAppid(scope.row)">查看</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="权限内容" align="left"  header-align="center">
+            <template scope="scope">
+              <el-checkbox  :key="index" v-for="(item, index) in scope.row.auth" v-model="item.owned">{{item.name}}</el-checkbox>
+            </template>
+          </el-table-column>
+          <!--<el-table-column-->
+            <!--v-for="(header,index) in tableHeader"-->
+            <!--:prop="header.prop"-->
+            <!--:label="header.label"-->
+            <!--:key="index"-->
+            <!--align="center">-->
+          <!--</el-table-column>-->
+          <!--<el-table-column label="权限内容" align="center" width="240">-->
+            <!--<template scope="scope">-->
+              <!--<el-checkbox-group v-model="scope.row.auth">-->
+                <!--<el-checkbox  v-for="(item, index) in allOperateAuth" :key="item" :label="item">{{item.name}}</el-checkbox>-->
+              <!--</el-checkbox-group>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <el-table-column label="业务审核人" prop="handler.name" align="center">
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" align="center" width="100">
+            <template scope="scope">
+              <el-button @click.native.prevent="addRow(scope.$index, tableAddData)" size="small">
+                添加
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-row>
       <!-- 已有列表 -->
       <el-row>
@@ -54,10 +69,8 @@
             <el-input placeholder="请输入关键字搜索" v-model="inputSearch"></el-input>
           </el-col>
         </el-row></el-col>
-        <el-table :data="tableDel" border style="width: 100%" max-height="250" @selection-change="handleSelectionChange">
-          <el-table-column
-            type="selection">
-          </el-table-column>
+        <el-table ref="table" row-key="id" :data="tableDel" border style="width: 100%" max-height="250" @selection-change="handleSelectionChange" v-loading="tableDelLoading" element-loading-text="拼命加载中">
+          <el-table-column type="selection" :reserve-selection="true"></el-table-column>
           <el-table-column
             v-for="(header,index) in tableHeader"
             :prop="header.prop"
@@ -65,10 +78,9 @@
             :key="index"
             align="center">
           </el-table-column>
-          <el-table-column label="权限内容" align="center" width="220">
+          <el-table-column label="权限内容" align="center" width="240">
             <template scope="scope">
-              <el-checkbox v-model="scope.row.content.refund" disabled>发货退款</el-checkbox>
-              <el-checkbox v-model="scope.row.content.alarm" disabled>报警设置</el-checkbox>
+              <el-checkbox :label="item.name" v-for="item in tableDel[scope.$index].auth" :key="item" disabled v-model="item.owned">{{item.name}}</el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="业务审核人" prop="verifier" align="center">
@@ -84,34 +96,38 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <paging :msg="paging"></paging>
         <el-dialog title="批量修改" v-model="dialogVisible" size="tiny" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false" align="center">
-          <el-checkbox v-model="refund">发货退款</el-checkbox>
-          <el-checkbox v-model="alarm">报警设置</el-checkbox>
+          <el-checkbox  v-for="item in auth" :key="item.id" :label="item.name" v-model="item.owned">{{item.name}}</el-checkbox>
           <span slot="footer" class="dialog-footer">
             <el-button @click="cancelAlertRow">取 消</el-button>
-            <el-button type="primary" @click="alertRow()">确 定</el-button>
+            <el-button type="primary" @click="alertRow">确 定</el-button>
           </span>
         </el-dialog>
       </el-row>
     </el-row>
+    <AppIdTable ref="appidTable"></AppIdTable>
   </div>
 </template>
 
 <script>
-// import Selector from './Selector'
+import SelectAuth from 'components/SelectAuth'
+import Paging from './Paging'
+import AppIdTable from 'components/AppIdTable'
 
 export default {
   name: 'MemberOperation',
-  // components: {
-  //   Selector
-  // },
+  components: {
+    SelectAuth,
+    Paging,
+    AppIdTable
+  },
   data () {
     return {
-      role: '',
+      user: '',
       inputSearch: '',
       dialogVisible: false,
-      refund: false,
-      alarm: false,
       multipleSelection: [],
       tableHeader: [
         {
@@ -127,7 +143,7 @@ export default {
           prop: 'terminal',
           label: '终端'
         }, {
-          prop: 'package',
+          prop: 'apk',
           label: '应用包'
         }, {
           prop: 'appid',
@@ -136,26 +152,100 @@ export default {
       ],
       tableAddData: [],
       tableDelData: [],
-      alertRowData: []
+      alertRowData: [],
+      allOperateAuth: [],
+      auth: [],
+      tableDelLoading: true,
+      paging: {
+        currentPage: 1,
+        size: 5,
+        total: 0
+      }
     }
   },
   methods: {
+    getAppid (params) {
+      // 打开appid列表
+      this.$refs.appidTable.getAppid(params)
+    },
+    // 获取url参数
+    getUrl (name) {
+      let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+      let r = window.location.search.substr(1).match(reg)
+      if (r !== null) {
+        return decodeURIComponent(decodeURI(r[2]))
+      }
+      return null
+    },
+    // 加载数据
+    load () {
+      this.$refs.table.clearSelection()
+      this.auth = []
+      this.user = this.getUrl('user')
+      let id = this.getUrl('id')
+      this.$http.get('manage/member-operation?id=' + id).then((res) => {
+        this.tableDelData = [...res.body.data.list]
+        this.tableDelLoading = false
+      }, (res) => {
+        // error callback
+        this.$message.error('服务器异常！')
+      })
+      this.$http.get('manage/all-operation').then((res) => {
+        res.body.data.forEach((item) => {
+          this.auth.push({
+            id: item.id,
+            name: item.name,
+            owned: false
+          })
+        })
+      }, (res) => {
+        // error callback
+        this.$message.error('服务器异常！')
+      })
+    },
+    // 选择器添加到表格
+    addSelData (appidList) {
+      // 加入等待队列
+      let _appidList = JSON.stringify(appidList)
+      // 根据APPID获取权限列表和该用户已有的权限
+      this.$http.post('apply/appid-action', _appidList).then(response => {
+        if (response.body.error_code === 0) {
+          this.tableAddData = this.tableAddData.concat(response.body.data)
+        } else {
+          this.$message.error('参数错误！')
+        }
+      }, response => {
+          // error callback
+        this.$message.error('服务器异常')
+      })
+    },
     // 添加到已申请列表
     addRow (index, rows) {
+      let id = this.getUrl('id')
+      console.log(index, rows, rows[index].appid)
+      let auth = []
+      for (let i = 0; i < rows[index].auth.length; i++) {
+        auth.push(rows[index].auth[i].id)
+      }
       this.$confirm('此操作将添加该APPID操作权限, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('http://localhost:3000/memberOperationAdd?id=', rows[index].id).then((res) => {
-          if (res.data.msg) {
+        this.$http.post('manage/member-operation-add?', {
+          userId: id,
+          appid: rows[index].appid,
+          auth: auth
+        }).then((res) => {
+          if (res.body.data) {
             this.$message({
               type: 'success',
               message: '添加成功!'
             })
-            this.tableDelData.push(rows[index])
             rows.splice(index, 1)
             this.load()
+          } else if (res.body.error_code === 1) {
+            this.$message.error('权限内容不能为空！')
           } else {
             this.$message.error('服务器异常！')
           }
@@ -174,41 +264,29 @@ export default {
     deleteRow (index) {
       let id = index
       if (id.length !== 0) {
-        this.$confirm('此操作将删除已有操作权限, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.post('http://localhost:3000/memberOperationDel', id).then((res) => {
-            if (res.data.msg) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              for (let i = 0; i < id.length; i++) {
-                for (let j = 0; j < this.tableDelData.length; j++) {
-                  if (id[i] === this.tableDelData[j].id) {
-                    this.tableDelData.splice(j, 1)
-                  }
-                }
-              }
-            } else {
-              this.$message.error('服务器异常！')
-            }
-          }, (res) => {
-            // error callback
+        this.$http.post('manage/member-operation-del', {
+          id: id
+        }).then((res) => {
+          if (res.body.data) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.tableDelLoading = true
+            this.load()
+            this.dialogVisible = false
+          } else {
             this.$message.error('服务器异常！')
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          }
+        }, (res) => {
+          // error callback
+          this.$message.error('服务器异常！')
         })
       } else {
         this.$message.error('请选择要删除的操作权限！')
       }
     },
+    // 批量修改
     alertRowDialog (index) {
       if (index.length !== 0) {
         this.dialogVisible = true
@@ -217,27 +295,35 @@ export default {
         this.$message.error('请选择要修改的操作权限！')
       }
     },
+    // 取消修改
     cancelAlertRow () {
       this.dialogVisible = false
+      this.$message('已取消修改')
+      this.auth.forEach((item) => { item.owned = false })
     },
     // 修改已申请列表
     alertRow () {
       if (this.alertRowData.length !== 0) {
-        let data = {
-          id: this.alertRowData,
-          status: {
-            refund: this.refund,
-            alarm: this.alarm
+        let auth = []
+        for (let i = 0; i < this.auth.length; i++) {
+          if (this.auth[i].owned) {
+            auth.push(this.auth[i].id)
           }
         }
-        this.$http.post('http://localhost:3000/memberOperationAlert', data).then((res) => {
-          if (res.data.msg) {
+        this.$http.post('manage/member-operation-alert', {
+          id: this.alertRowData,
+          auth: auth
+        }).then((res) => {
+          if (res.body.data) {
             this.$message({
               type: 'success',
               message: '修改成功!'
             })
+            this.tableDelLoading = true
             this.load()
             this.dialogVisible = false
+          } else if (res.body.error_code === 1) {
+            this.$message.error('权限内容不能为空！')
           } else {
             this.$message.error('服务器异常！')
           }
@@ -249,70 +335,40 @@ export default {
         this.$message.error('请选择要修改的操作权限！')
       }
     },
-    // 加载数据
-    load () {
-      this.role = this.getUrl('role')
-      let id = this.getUrl('id')
-      this.$http.get('http://localhost:3000/memberOperation?id=' + id).then((res) => {
-        this.tableDelData = res.data.list.slice()
-      }, (res) => {
-        // error callback
-        this.$message.error('服务器异常！')
-      })
-    },
-    // 获取url参数
-    getUrl (name) {
-      let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
-      let r = window.location.search.substr(1).match(reg)
-      if (r !== null) {
-        return decodeURIComponent(decodeURI(r[2]))
-      }
-      return null
-    },
+    // 表格选择器
     handleSelectionChange (val) {
       let id = []
       for (let i = 0; i < val.length; i++) {
         id.push(val[i].id)
       }
-      this.multipleSelection = id
-      console.log(this.multipleSelection)
-    },
-    addSelData (data) {
-      // 加入等待队列
-      //  这里要对数据格式做些处理，然后push到waitingAdd数组中
-      let _dataCache = {}
-      _dataCache.game = data[0]['isAll'] ? ['全部游戏'] : data[0]['checked']
-      _dataCache.platform = data[1]['isAll'] ? ['全部平台'] : data[1]['checked']
-      _dataCache.hall = data[2]['isAll'] ? ['全部'] : data[2]['checked']
-      _dataCache.terminal = data[3]['isAll'] ? ['全部'] : data[3]['checked']
-      _dataCache.appPackage = data[4]['isAll'] ? ['全部'] : data[4]['checked']
-      _dataCache.appid = data[5]['isAll'] ? ['全部'] : data[5]['checked']
-      _dataCache.deliverRefund = false
-      _dataCache.warningSetting = false
-      console.dir(_dataCache)
-      this.waitingAdd.push(_dataCache)
+      this.multipleSelection = [...id]
     }
   },
   computed: {
+    // 动态渲染表格
     tableDel () {
+      let data = []
       if (this.inputSearch === '') {
-        return this.tableDelData
-      }
-      let search = this.inputSearch
-      let data = this.tableDelData.slice()
-      for (let i = 0; i < data.length;) {
-        let judge = false
-        for (let value in data[i]) {
-          // 正则匹配
-          judge = judge || (new RegExp(search).test(data[i][value]))
+        this.paging.total = this.tableDelData.length
+        data = this.tableDelData
+      } else {
+        let search = this.inputSearch
+        data = [...this.tableDelData]
+        for (let i = 0; i < data.length;) {
+          let judge = false
+          for (let value in data[i]) {
+            // 正则匹配
+            judge = judge || (new RegExp(search, 'i').test(data[i][value]))
+          }
+          if (!judge) {
+            data.splice(i, 1)
+          } else {
+            i++
+          }
         }
-        if (!judge) {
-          data.splice(i, 1)
-        } else {
-          i++
-        }
+        this.paging.total = data.length
       }
-      return data
+      return data.slice(((this.paging.currentPage - 1) * this.paging.size), (this.paging.currentPage * this.paging.size))
     }
   },
   // 初始化
@@ -323,43 +379,43 @@ export default {
 </script>
 
 <style scoped>
-.MemberOperation{
-  margin: 10px;
-}
-.proposer{
-  line-height: 34px;
-}
-.content>span:first-child,
-.proposer>span:first-child{
-  display: block;
-  font-weight: bold;
-  line-height: 24px;
-}
-.content .el-row{
-  margin: 15px 0;
-}
-.content .el-row>.el-col:first-child{
-  font-weight: bold;
-}
-.more{
-  margin-left: 15px;
-}
-.list-title{
-  line-height: 34px;
-  margin-top: 16px;
-}
-.button-submit{
-  text-align: center;
-  margin: 10px 0;
-}
-table td{
-  background: red;
-}
-.button{
-  margin: 10px 0;
-}
-.select-btn{
-  padding: 5px 0;
-  margin-bottom: 10px;
-}
+  .MemberOperation{
+    margin: 10px;
+  }
+  .proposer{
+    line-height: 34px;
+  }
+  .content>span:first-child,
+  .proposer>span:first-child{
+    display: block;
+    font-weight: bold;
+    line-height: 24px;
+  }
+  .content .el-row{
+    margin: 15px 0;
+  }
+  .content .el-row>.el-col:first-child{
+    font-weight: bold;
+  }
+  .more{
+    margin-left: 15px;
+  }
+  .list-title{
+    line-height: 34px;
+    margin-top: 16px;
+  }
+  .button-submit{
+    text-align: center;
+    margin: 10px 0;
+  }
+  table td{
+    background: red;
+  }
+  .button{
+    margin: 10px 0;
+  }
+  .select-btn{
+    padding: 5px 0;
+    margin-bottom: 10px;
+  }
 </style>

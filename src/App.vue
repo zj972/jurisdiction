@@ -5,16 +5,34 @@
     </el-row>
     <el-row>
       <el-col :xs="24" :sm="4" :md="3" :lg="2">
-        <el-menu router class="list"><!-- :default-active="lists[0].address" 默认选中第一个，需要修改index.js中lists的path:'/' -->
-          <el-menu-item
-            v-for="(list, index) in lists"
-            :index="list.address"
-            :key="index"><router-link :to="'/' + list.address" v-text="list.name"></router-link>
+        <el-menu router class="list" :default-active="active">
+          <el-menu-item index="apply">
+            <router-link to="/apply" class="router-item" >权限申请</router-link>
+          </el-menu-item>
+          <el-menu-item index="myauth" @click.native="getAuthData">
+            <router-link to="/myauth" class="router-item">
+              <span>我的权限</span>
+              <span class="my-badge" v-show="newAuthNum > 0">{{newAuthNum}}</span>
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="approval" @click.native="getApprovalData">
+            <router-link to="/approval" class="router-item">
+              <span>我的审批</span>
+              <span class="my-badge" v-show="approvalNum > 0">{{approvalNum}}</span>
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="manage" v-show="auth">
+            <router-link to="/manage" class="router-item">权限管理</router-link>
+          </el-menu-item>
+          <el-menu-item index="memberauth" v-show="auth">
+            <router-link to="/memberauth" class="router-item">角色管理</router-link>
           </el-menu-item>
         </el-menu>
       </el-col>
       <el-col :xs="24" :sm="20" :md="21" :lg="22">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view :new-msg="newMsg" :user-msg="userMsg" ref="child" @getNewMsg="getNewMsg"></router-view>
+        </keep-alive>
       </el-col>
     </el-row>
   </div>
@@ -25,30 +43,85 @@ export default {
   name: 'app',
   data () {
     return {
-      lists: [
-        {
-          name: '权限申请',
-          address: 'Application'
-        },
-        {
-          name: '我的权限',
-          address: 'Individual'
-        },
-        {
-          name: '我的审批',
-          address: 'Approval'
-        },
-        {
-          name: '权限管理',
-          address: 'Manage'
-        }
-      ]
+      auth: true,
+      active: 'apply',
+      userMsg: {},
+      newMsg: {}
     }
+  },
+  methods: {
+    // manage显示
+    showManage () {
+      this.$http.get('manage/auth').then(response => {
+        if (response.body.data === 0) {
+          this.auth = true
+          window.localStorage.manage = 0
+        } else {
+          window.localStorage.manage = -1
+          this.auth = false
+        }
+      }, response => {
+        // error callback
+      })
+    },
+    // 侧栏选中
+    getActive () {
+      this.active = window.location.pathname.substr(1).split('/')[0]
+    },
+    // 每次路由切换到我的权限时，都会发送一次请求,在这里获取数据后，在切换Tab标签的时候就不用再发送请求
+    getAuthData () {
+      this.$refs.child.getAllData()
+    },
+    getApprovalData () {
+      this.$refs.child.refresh()
+    },
+    // 获取员工基本信息
+    getUserId () {
+      this.$http.get('app/user-msg').then(response => {
+        if (response.body.error_code === 0) {
+          this.userMsg = response.body.data
+        }
+      }, response => {
+        // error callback
+      })
+    },
+    // 获取新消息数目
+    getNewMsg () {
+      this.$http.get('app/new-msg').then(response => {
+        if (response.body.error_code === 0) {
+          this.newMsg = response.body.data
+          // this.newMsg = mockNewMsg
+        }
+      }, response => {
+        // error callback
+      })
+    }
+  },
+  computed: {
+    newAuthNum () {
+      return this.newMsg.pending + this.newMsg.reject
+    },
+    approvalNum () {
+      return this.newMsg.arvView + this.newMsg.arvOpt
+    }
+  },
+  created () {
+    // manage显示
+    this.showManage()
+    // 侧栏选中
+    this.getActive()
+    // 获取员工工号
+    this.getUserId()
+    // 获取新消息数目
+    this.getNewMsg()
   }
 }
 </script>
 
 <style>
+  [v-cloak] {
+    display: none;
+  }
 .title{
   background: #8492A6;
   color: #fff;
@@ -70,6 +143,38 @@ export default {
   color: #fff;
 }
 .border-bottom{
-  border-bottom: 1px solid #99A9BF;
+  border-bottom: 1px solid #bfcbd9;
+}
+
+/*切换动画*/
+.router-enter-active {
+  transition: all 1s ease;
+}
+
+.router-leave-active {
+  transition: all 0s;
+}
+
+.router-enter,
+.router-leave-active {
+  opacity: 0;
+}
+
+.router-item{
+  position: relative;
+}
+.my-badge {
+  position: absolute;
+  top: -10px;
+  right: -25px;
+  padding:2px 7px;
+  background: red;
+  color: #fff;
+  line-height: 14px;
+  font-size: 12px;
+  border-radius: 10px;
+}
+.el-table .info-row{
+  background: #5CB85C;
 }
 </style>

@@ -1,0 +1,13 @@
+{
+  "authSelect": [{
+    "menuName": "game",
+    "checked": ["德州扑克","锄大地"],
+    "isAll": false,
+    "isIndeterminate": false
+  }, {
+    "menuName": "platform",
+    "checked": ["新浪","网易"],
+    "isAll": false,
+    "isIndeterminate": false
+  }]
+}

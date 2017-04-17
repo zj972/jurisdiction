@@ -1,19 +1,19 @@
 <!-- 权限管理 -> 二级路由 -->
 <template>
   <div class="ManageIndex">
-    <el-tabs value="role">
+    <el-tabs value="role" v-model="activeName" @tab-click="tabClick">
       <!-- 角色管理 -->
       <el-tab-pane label="角色管理" name="role">
         <el-row type="flex" justify="space-between" class="button-row">
           <el-col :xs="24" :sm="16" :md="14" :lg="12">
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-input placeholder="请输入内容" v-model="inputRole">
+                <el-input placeholder="请输入内容" v-model="inputRole" @change="inputChange">
                   <template slot="prepend">角色</template>
                 </el-input>
               </el-col>
               <el-col :span="12">
-                <el-input placeholder="请输入内容" v-model="inputMember">
+                <el-input placeholder="请输入内容" v-model="inputMember" @change="inputChange">
                   <template slot="prepend">成员</template>
                 </el-input>
               </el-col>
@@ -26,39 +26,43 @@
             </el-col></el-row>
           </el-col>
         </el-row>
-        <el-table :data="tableRole" border class="tableWidth">
+        <el-table :data="tableRole" border style="width: 100%" v-loading="tableRoleLoading" element-loading-text="拼命加载中">
           <el-table-column prop="id" label="角色ID" align="center" width="80">
           </el-table-column>
           <el-table-column prop="role" label="角色" align="center" width="150">
           </el-table-column>
           <el-table-column label="菜单管理" align="center" width="120">
             <template scope="scope">
-              <el-button @click.native.prevent="roleMenu(scope.$index, tableRoleData)" size="small">
+              <el-button @click.native.prevent="roleMenu(scope.$index, tableRole)" size="small">
                 菜单管理
               </el-button>
             </template>
           </el-table-column>
           <el-table-column label="成员管理" align="center" width="120">
             <template scope="scope">
-              <el-button @click.native.prevent="roleMember(scope.$index, tableRoleData)" size="small">
+              <el-button @click.native.prevent="roleMember(scope.$index, tableRole)" size="small">
                 成员管理
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="checked" label="已选菜单" align="center" :show-overflow-tooltip="true" min-width="200">
+          <el-table-column prop="checked" label="已选菜单" align="center" :show-overflow-tooltip="true" min-width="300">
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center" :show-overflow-tooltip="true" min-width="200">
           </el-table-column>
           <el-table-column label="操作" align="center" width="140"><!--  fixed="right" -->
             <template scope="scope">
               <!-- 修改角色 -->
-              <role-modify :id="tableRole[scope.$index].id" @loading="load"></role-modify>
+              <el-button @click.native.prevent="roleAlert(tableRole[scope.$index].id)" size="small">修改</el-button>
               <el-button @click.native.prevent="roleDel(scope.$index, tableRole)" size="small">
                 删除
               </el-button>
             </template>
           </el-table-column>
         </el-table>
+        <!-- 修改角色dialog -->
+        <role-modify @loading="load" ref="roleModify"></role-modify>
+        <!-- 分页 -->
+        <paging :msg="rolePaging"></paging>
       </el-tab-pane>
       <!-- 成员管理 -->
       <el-tab-pane label="成员管理" name="member">
@@ -67,11 +71,12 @@
             <el-input
               placeholder="请输入关键字搜索"
               icon="search"
-              v-model="inputSearch">
+              v-model="inputSearch"
+              @change="inputChange">
             </el-input>
           </el-col>
         </el-row>
-        <el-table :data="tableMember" border class="tableWidth">
+        <el-table :data="tableMember" border style="width: 100%" v-loading="tableMemberLoading" element-loading-text="拼命加载中">
           <el-table-column prop="id" label="用户ID" align="center" width="80">
           </el-table-column>
           <el-table-column label="用户姓名" align="center">
@@ -81,7 +86,7 @@
           </el-table-column>
           <el-table-column prop="role" label="用户角色" align="center">
           </el-table-column>
-          <el-table-column prop="department" label="所属部门" align="center">
+          <el-table-column prop="department" label="所属部门" align="center" :show-overflow-tooltip="true" width="280">
           </el-table-column>
           <el-table-column prop="lastLoginTime" label="最后登录时间" align="center">
           </el-table-column>
@@ -96,32 +101,58 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <paging :msg="memberPaging"></paging>
       </el-tab-pane>
     </el-tabs>
+
   </div>
 </template>
 
 <script>
 import RoleAdd from './RoleAdd'
 import RoleModify from './RoleModify'
+import Paging from './Paging'
 
 export default {
   components: {
     RoleAdd,
-    RoleModify
+    RoleModify,
+    Paging
   },
   name: 'ManageIndex',
   data () {
     return {
+      activeName: '',
       tableRoleData: [],
-      // 接收数据是使用slice()克隆tableMemberData
       tableMemberData: [],
+      tableRoleLoading: true,
+      tableMemberLoading: true,
       inputRole: '',
       inputMember: '',
-      inputSearch: ''
+      inputSearch: '',
+      rolePaging: {
+        currentPage: 1,
+        size: 10,
+        total: 0
+      },
+      memberPaging: {
+        currentPage: 1,
+        size: 10,
+        total: 0
+      }
     }
   },
   methods: {
+    // 获取url参数
+    getUrl (name) {
+      let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+      let r = window.location.search.substr(1).match(reg)
+      if (r !== null) {
+        return decodeURIComponent(decodeURI(r[2]))
+      }
+      return null
+    },
     // 菜单管理（角色管理页）
     roleMenu (index, rows) {
       this.$router.push({name: 'RoleMenu', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
@@ -130,6 +161,10 @@ export default {
     roleMember (index, rows) {
       this.$router.push({name: 'RoleMember', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
     },
+    // 修改
+    roleAlert (index) {
+      this.$refs.roleModify.open(index)
+    },
     // 删除
     roleDel (index, rows) {
       this.$confirm('此操作将删除该角色, 是否继续?', '提示', {
@@ -137,13 +172,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.get('http://localhost:3000/roleDel?id=' + rows[index].id).then((res) => {
-          if (res.data.msg) {
+        this.$http.get('manage/role-del?id=' + rows[index].id).then((res) => {
+          if (res.body.data) {
             rows.splice(index, 1)
             this.$message({
               type: 'success',
               message: '删除成功!'
             })
+            this.load()
           } else {
             this.$message.error('服务器异常！')
           }
@@ -160,99 +196,125 @@ export default {
     },
     // 菜单管理（成员管理页）
     menuMember (index, rows) {
-      console.log(rows[index])
       this.$router.push({name: 'MemberMenu', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
     },
     // 操作权限
     memberOperation (index, rows) {
-      console.log(this.$router)
-      console.log(rows[index])
-      this.$router.push({name: 'MemberOperation', query: {id: rows[index].id, role: encodeURIComponent(rows[index].role)}})
+      this.$router.push({name: 'MemberOperation', query: {id: rows[index].id, user: encodeURIComponent(rows[index].chineseName)}})
     },
     // 加载数据
     load () {
-      this.$http.get('http://localhost:3000/manageIndex').then((res) => {
-        this.tableRoleData = res.data.role.slice()
-        this.tableMemberData = res.data.member.slice()
+      this.tableRoleLoading = true
+      this.tableMemberLoading = true
+      this.$http.get('manage/index').then((res) => {
+        this.tableRoleData = [...res.body.data.role]
+        for (let i = 0; i < this.tableRoleData.length; i++) {
+          this.tableRoleData[i].checked = this.tableRoleData[i].checked.join('、')
+        }
+        this.tableMemberData = [...res.body.data.member]
+        this.tableRoleLoading = false
+        this.tableMemberLoading = false
       }, (res) => {
         // error callback
         this.$message.error('服务器异常！')
       })
+    },
+    // input输入调整页数
+    inputChange () {
+      this.rolePaging.currentPage = 1
+      this.memberPaging.currentPage = 1
+    },
+    // 统一加载动画样式
+    tabClick () {
+      this.tableRoleLoading = true
+      this.tableMemberLoading = true
+      setTimeout(() => {
+        this.tableRoleLoading = false
+        this.tableMemberLoading = false
+      }, 200)
     }
   },
   computed: {
-    // 动态渲染表格
+    // 动态渲染表格Role
     tableRole () {
+      let data = []
       if (this.inputRole === '' && this.inputMember === '') {
-        return this.tableRoleData
-      }
-      let role = this.inputRole
-      let member = this.inputMember
-      let roleData = this.tableRoleData.slice()
-      if (role) {
-        for (let i = 0; i < roleData.length;) {
-          let judge = false
-          // 正则匹配
-          judge = judge || (new RegExp(role).test(roleData[i].role))
-          if (!judge) {
-            roleData.splice(i, 1)
-          } else {
-            i++
-          }
-        }
-      }
-      let memberData = this.tableMemberData.slice()
-      let roleMember = []
-      if (member) {
-        console.log(this.tableMemberData)
-        for (let i = 0; i < memberData.length; i++) {
-          let judge = false
-          judge = judge || (new RegExp(member).test(memberData[i].name))
-          if (judge) {
-            roleMember.push(memberData[i].role)
-          }
-        }
-        console.log(roleMember)
-        for (let i = 0; i < roleData.length;) {
-          let judge = false
-          for (let j = 0; j < roleMember.length; j++) {
-            if (roleData[i].role === roleMember[j]) {
-              judge = true
+        this.rolePaging.total = this.tableRoleData.length
+        data = this.tableRoleData
+      } else {
+        let role = this.inputRole
+        let member = this.inputMember
+        let roleData = [...this.tableRoleData]
+        if (role) {
+          for (let i = 0; i < roleData.length;) {
+            let judge = false
+            // 正则匹配
+            judge = judge || (new RegExp(role, 'i').test(roleData[i].role))
+            if (!judge) {
+              roleData.splice(i, 1)
+            } else {
+              i++
             }
           }
+        }
+        let memberData = [...this.tableMemberData]
+        let roleMember = []
+        if (member) {
+          for (let i = 0; i < memberData.length; i++) {
+            let judge = false
+            judge = judge || (new RegExp(member, 'i').test(memberData[i].chineseName)) || (new RegExp(member, 'i').test(memberData[i].englishName))
+            if (judge) {
+              roleMember.push(memberData[i].role)
+            }
+          }
+          for (let i = 0; i < roleData.length;) {
+            let judge = false
+            for (let j = 0; j < roleMember.length; j++) {
+              if (roleData[i].role === roleMember[j]) {
+                judge = true
+              }
+            }
+            if (!judge) {
+              roleData.splice(i, 1)
+            } else {
+              i++
+            }
+          }
+        }
+        this.rolePaging.total = roleData.length
+        data = roleData
+      }
+      return data.slice(((this.rolePaging.currentPage - 1) * this.rolePaging.size), (this.rolePaging.currentPage * this.rolePaging.size))
+    },
+    // 动态渲染表格Member
+    tableMember () {
+      let data = []
+      if (this.inputSearch === '') {
+        this.memberPaging.total = this.tableMemberData.length
+        data = [...this.tableMemberData]
+      } else {
+        let search = this.inputSearch
+        data = [...this.tableMemberData]
+        for (let i = 0; i < data.length;) {
+          let judge = false
+          for (let value in data[i]) {
+            // 正则匹配
+            judge = judge || (new RegExp(search, 'i').test(data[i][value]))
+          }
           if (!judge) {
-            roleData.splice(i, 1)
+            data.splice(i, 1)
           } else {
             i++
           }
         }
+        this.memberPaging.total = data.length
       }
-      return roleData
-    },
-    // 动态渲染表格
-    tableMember () {
-      if (this.inputSearch === '') {
-        return this.tableMemberData
-      }
-      let search = this.inputSearch
-      let data = this.tableMemberData.slice()
-      for (let i = 0; i < data.length;) {
-        let judge = false
-        for (let value in data[i]) {
-          // 正则匹配
-          judge = judge || (new RegExp(search).test(data[i][value]))
-        }
-        if (!judge) {
-          data.splice(i, 1)
-        } else {
-          i++
-        }
-      }
-      return data
+      return data.slice(((this.memberPaging.currentPage - 1) * this.memberPaging.size), (this.memberPaging.currentPage * this.memberPaging.size))
     }
   },
   // 初始化
   mounted () {
+    this.activeName = this.getUrl('active') || 'role'
     this.load()
   }
 }
@@ -267,6 +329,8 @@ export default {
 }
 .button-row>.el-col>.el-row{
   margin: 0;
+}
+.RoleAdd{
 }
 </style>
 <style>

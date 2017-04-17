@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+  var arr= []
+  var testArr=[{
+      name;'Djlxs',
+      favorite: ['篮球','足球']
+  },{
+    name;'Djlxs',
+      favorite: '羽毛球'
+  },{
+    name;'Djlxs',
+      favorite: '足球'
+  }]
+  function deepCopy(p,str) {
+      var c = {}
+      arr.forEach(function (item) {
+        if (typeof item === 'object') {
+          deepCopy(item,str);
+        } else {
+          if (item.indexOf(str) > -1){
+            arr.push(item)
+          };
+        }
+      })
+
+
+    for (var i in p) {
+      if (typeof p[i] === 'object') {
+        deepCopy(p[i],str);
+      } else {
+         if (p.indexOf(str) > -1){
+           arr.push(p)
+         };
+      }
+    }
+    return c;
+  }
+</script>
+</body>
+</html>
