@@ -56,6 +56,39 @@ path: '/Manage',
   }
 ```
 
+上面的加'/'是一种妥协办法，其根本原因是Element-UI他的<el-menu-item>标签有个index属性是用来负责跳转的，所以不用再加<router-link>跳转路由，index标签没有加“/”，所以会出现偶尔跳转错误。
+
+```
+        <el-menu router class="list" :default-active="active">
+          <el-menu-item index="/apply">
+            <!--<router-link to="/apply" class="router-item" >权限申请</router-link>-->
+            权限申请
+          </el-menu-item>
+          <el-menu-item index="/myauth" @click.native="getAuthData">
+            <!--<router-link to="/myauth" class="router-item">-->
+              <span>我的权限</span>
+              <span class="my-badge" v-show="newAuthNum > 0">{{newAuthNum}}</span>
+            <!--</router-link>-->
+          </el-menu-item>
+          <el-menu-item index="/approval" @click.native="getApprovalData">
+            <!--<router-link to="/approval" class="router-item">-->
+              <span>我的审批</span>
+              <span class="my-badge" v-show="approvalNum > 0">{{approvalNum}}</span>
+            <!--</router-link>-->
+          </el-menu-item>
+          <el-menu-item index="/manage" v-show="auth">
+            <!--<router-link to="/manage" class="router-item">权限管理</router-link>-->
+            权限管理
+          </el-menu-item>
+          <el-menu-item index="/memberauth" v-show="auth">
+            <!--<router-link to="/memberauth" class="router-item">角色管理</router-link>-->
+            角色管理
+          </el-menu-item>
+        </el-menu>
+```
+
+注释为错误示范
+
 >6.tabs首次切换时，table宽度跳动
 
 在数据渲染前，table的宽度是没有撑开的，当数据渲染后，宽度被撑开，导致了宽度的跳动，解决方案是将table中的数据设置不允许换行，这样就没有初始时数据挤压在一起的现象，也除去了宽度跳动的效果
